@@ -8,6 +8,8 @@
 import CoverImage from '../CoverImage.astro';
 import IngredientPanel from './IngredientPanel.astro';
 import { extractRecipe, ingredientCount } from './recipe-parts';
+import { recipeSchema } from './recipe-schema';
+import { ogImageUrl } from '../../lib/cover';
 import { postUrl, readingTime, url, type Post } from '../../lib/site';
 
 interface Props {
@@ -31,8 +33,15 @@ const labelSteps = (h: string) =>
 const methodHtml = html ? labelSteps(twoColumn ? parts!.method : html) : undefined;
 
 const photo = cover;
+
+// Rich results need an image: the cover, otherwise the first photo in the text.
+const firstPhoto = html?.match(/<img\b[^>]*\bsrc="([^"]+)"/g)?.map((t) => t.match(/src="([^"]+)"/)![1]).find((src) => !src.endsWith('placeholder.svg'));
+const schemaImage = cover ? await ogImageUrl(cover, Astro.site!) : firstPhoto && new URL(firstPhoto, Astro.site).href;
+const schema = recipeSchema(post, parts, schemaImage, Astro.site!);
 const numeric = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
 <article class="recipe-page" data-ressort="rezepte" data-pagefind-body>
   <header class="recipe-head">

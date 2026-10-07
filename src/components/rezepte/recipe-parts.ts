@@ -26,6 +26,8 @@ export interface RecipeParts {
   groups: IngredientGroup[];
   facts: Fact[];
   method: string;
+  /** Plain-text paragraphs and list items after the first ingredient group. */
+  steps: string[];
 }
 
 const INGREDIENT_LABELS = ['Zutaten', 'Teig', 'Füllung', 'Belag', 'Streusel', 'Optional', 'Gewürze', 'Für die Soße'];
@@ -62,6 +64,17 @@ export function splitBlocks(html: string): string[] {
 }
 
 const text = (html: string) => html.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
+
+const ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+/** Tags stripped and entities decoded, for structured data (not for HTML output). */
+export const plainText = (html: string) =>
+  html
+    .replace(/<[^>]+>/g, '')
+    .replace(/&(#x?[\da-f]+|\w+);/gi, (m, e: string) =>
+      e[0] === '#' ? String.fromCodePoint(parseInt(e.slice(1).replace(/^x/i, ''), /^#x/i.test(e) ? 16 : 10)) : (ENTITIES[e] ?? m),
+    )
+    .replace(/\s+/g, ' ')
+    .trim();
 const inner = (block: string) => block.replace(/^<[^>]+>/, '').replace(/<\/[^>]+>\s*$/, '');
 const isList = (block: string) => /^<(ul|ol)\b/i.test(block);
 const listItems = (block: string) => [...block.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)].map((m) => m[1]);
@@ -101,6 +114,12 @@ function matchFactList(block: string): Fact[] | undefined {
   return facts.map((f) => ({ label: f![1], lines: [f![2]] }));
 }
 
+/** Paragraphs and list items are steps; headings, figures and tips are not. */
+function toSteps(block: string): string[] {
+  const lines = isList(block) ? listItems(block) : /^<p\b/i.test(block) ? [inner(block)] : [];
+  return lines.map(plainText).filter(Boolean);
+}
+
 const canonical = (label: string) => ALL_LABELS.find((l) => l.toLowerCase() === label.toLowerCase()) ?? label;
 
 export function extractRecipe(html: string): RecipeParts {
@@ -108,6 +127,7 @@ export function extractRecipe(html: string): RecipeParts {
   const groups: IngredientGroup[] = [];
   const facts: Fact[] = [];
   const method: string[] = [];
+  const steps: string[] = [];
 
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i];
@@ -121,6 +141,7 @@ export function extractRecipe(html: string): RecipeParts {
     const hit = matchLabel(block);
     if (!hit) {
       method.push(block);
+      if (groups.length > 0) steps.push(...toSteps(block));
       continue;
     }
 
@@ -145,7 +166,7 @@ export function extractRecipe(html: string): RecipeParts {
     }
   }
 
-  return { groups, facts, method: method.join('\n') };
+  return { groups, facts, method: method.join('\n'), steps };
 }
 
 /** Number of food ingredients (equipment excluded). */

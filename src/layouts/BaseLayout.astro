@@ -32,7 +32,8 @@ const feeds = [
 ];
 
 const author = { '@type': 'Person', name: SITE.author };
-const jsonLd = post
+// Recipes carry their own schema.org Recipe (RecipeArticle).
+const jsonLd = post && post.collection !== 'rezepte'
   ? {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
