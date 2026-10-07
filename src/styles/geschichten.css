@@ -1,4 +1,4 @@
-/* Geschichten: a table of contents by year, text-only reading pages. */
+/* Geschichten: a table of contents by year, calm reading pages. */
 
 .contents-year {
   position: relative;
@@ -32,7 +32,7 @@
   padding-top: 1.25rem;
 }
 
-/* Stories are text only: calmer, slightly larger reading size */
+/* Stories: calmer, slightly larger reading size */
 html[data-blog='geschichten'] .prose {
   font-size: 1.15rem;
   line-height: 1.8;
@@ -57,4 +57,10 @@ html[data-blog='geschichten'] .entry-main h1 {
   html[data-blog='geschichten'] .prose {
     font-size: 1.08rem;
   }
+}
+
+/* Unsplash covers come in any format; keep them from pushing the text off screen. */
+html[data-blog='geschichten'] .entry-cover img {
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
 }
