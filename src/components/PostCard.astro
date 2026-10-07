@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import CoverImage from './CoverImage.astro';
 import { formatDate, postUrl, type BlogKey, type Post } from '../lib/site';
 
 interface Props {
@@ -11,7 +11,7 @@ const { title, date, excerpt, cover, coverAlt } = post.data;
 ---
 
 <article class="post-card">
-  {cover && <Image src={cover} alt={coverAlt ?? ''} widths={[400, 800, 1200]} sizes="(min-width: 42rem) 42rem, 100vw" />}
+  {cover && <CoverImage src={cover} alt={coverAlt ?? ''} widths={[400, 800, 1200]} sizes="(min-width: 42rem) 42rem, 100vw" />}
   <div>
     <h2><a href={postUrl(blog, post.id)}>{title}</a></h2>
     <time datetime={date.toISOString()}>{formatDate(date)}</time>

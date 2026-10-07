@@ -2,15 +2,16 @@
 //
 // Usage: node scripts/import-ghost.mjs <path-to-backup>
 //
-// Every post becomes a folder with index.md and its images, named after the
-// post: src/content/<blog>/[<trip>/]<slug>/{index.md,<slug>-cover.jpg,<slug>-01.jpg,...}.
-// Unsplash covers are downloaded. Images missing from the backup are still
-// referenced under their new name and listed in scripts/missing-images.json,
-// so scripts/restore-images.mjs can put the originals in place later.
-// Existing generated folders are overwritten.
+// Posts become src/content/<blog>/[<trip>/]<slug>.md; their images go to one
+// folder per blog, src/content/<blog>/_images/, named after the post
+// (<slug>-cover.jpg, <slug>-01.jpg, ...). Unsplash covers stay remote URLs
+// (Astro optimizes them at build time). Images missing from the backup are
+// still referenced under their new name and listed in
+// scripts/missing-images.json, so scripts/restore-images.mjs can put the
+// originals in place later. Existing generated content is overwritten.
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { basename, extname, join, resolve } from 'node:path';
+import { basename, dirname, extname, join, relative, resolve } from 'node:path';
 import TurndownService from 'turndown';
 
 const backup = resolve(process.argv[2] ?? 'storyloom-backup-2026-10-07');
@@ -69,39 +70,31 @@ function cleanTags(tags) {
     .map((t) => t.name.replace(/^#/, '').trim());
 }
 
-/** Copies (or downloads) the images of one entry and hands out names based on its slug. */
+/** Copies the images of one entry into its blog's _images folder, named after its slug. */
 class EntryImages {
-  constructor(dir, slug, entryPath) {
-    this.dir = dir;
+  constructor(entryFile, imagesDir, slug) {
+    this.imagesDir = imagesDir;
     this.slug = slug;
-    this.entryPath = entryPath;
+    this.prefix = relative(dirname(entryFile), imagesDir) || '.';
     this.count = 0;
     this.names = new Map();
-    this.downloads = [];
   }
 
   name(url, suffix) {
+    if (!GHOST_IMAGE_URL.test(url)) return url; // remote (Unsplash): optimized by Astro at build time
     if (this.names.has(url)) return this.names.get(url);
     const clean = url.split('?')[0];
-    const ext = GHOST_IMAGE_URL.test(clean) ? extname(clean).toLowerCase().replace('.jpeg', '.jpg') : '.jpg';
+    const ext = extname(clean).toLowerCase().replace('.jpeg', '.jpg');
     const name = `${this.slug}-${suffix ?? String(++this.count).padStart(2, '0')}${ext}`;
-    this.names.set(url, `./${name}`);
+    const ref = `${this.prefix.startsWith('.') ? '' : './'}${this.prefix}/${name}`;
+    this.names.set(url, ref);
 
-    if (GHOST_IMAGE_URL.test(clean)) {
-      const source = join(backup, 'content/images', clean.replace(GHOST_IMAGE_URL, ''));
-      if (existsSync(source)) copyFileSync(source, join(this.dir, name));
-      else missing.push({ file: `${this.entryPath}/${name}`, original: basename(source) });
-    } else {
-      this.downloads.push(download(url, join(this.dir, name)));
-    }
-    return `./${name}`;
+    mkdirSync(this.imagesDir, { recursive: true });
+    const source = join(backup, 'content/images', clean.replace(GHOST_IMAGE_URL, ''));
+    if (existsSync(source)) copyFileSync(source, join(this.imagesDir, name));
+    else missing.push({ file: relative(root, join(this.imagesDir, name)), original: basename(source) });
+    return ref;
   }
-}
-
-async function download(url, dest) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Download failed (${res.status}): ${url}`);
-  writeFileSync(dest, Buffer.from(await res.arrayBuffer()));
 }
 
 const turndown = new TurndownService({
@@ -139,15 +132,14 @@ function frontmatter(data) {
   return `---\n${lines.join('\n')}\n---\n`;
 }
 
-/** `data` gets the relative cover path (if any) and returns the frontmatter. */
-async function writeEntry(entryPath, slug, html, coverUrl, data) {
-  const dir = join(contentDir, entryPath);
-  mkdirSync(dir, { recursive: true });
-  current = new EntryImages(dir, slug, `src/content/${entryPath}`);
+/** `data` gets the cover reference (if any) and returns the frontmatter. */
+function writeEntry(blog, entryPath, slug, html, coverUrl, data) {
+  const file = join(contentDir, `${entryPath}.md`);
+  mkdirSync(dirname(file), { recursive: true });
+  current = new EntryImages(file, join(contentDir, blog, '_images'), slug);
   const cover = coverUrl ? current.name(coverUrl, 'cover') : undefined;
   const body = turndown.turndown(html ?? '');
-  writeFileSync(join(dir, 'index.md'), `${frontmatter(data(cover))}\n${body}\n`);
-  await Promise.all(current.downloads);
+  writeFileSync(file, `${frontmatter(data(cover))}\n${body}\n`);
 }
 
 const { posts } = JSON.parse(readFileSync(join(backup, 'data/posts.json'), 'utf8'));
@@ -163,7 +155,7 @@ for (const post of posts) {
   const blog = blogFor(post);
   const entryPath = blog === 'reisen' ? `reisen/${tripFor(post)}/${post.slug}` : `${blog}/${post.slug}`;
   counts[blog] = (counts[blog] ?? 0) + 1;
-  await writeEntry(entryPath, post.slug, post.html, post.feature_image, (cover) => ({
+  writeEntry(blog, entryPath, post.slug, post.html, post.feature_image, (cover) => ({
     title: post.title,
     date: post.published_at,
     updated: post.updated_at,
@@ -179,7 +171,7 @@ for (const post of posts) {
 }
 
 for (const page of pages) {
-  await writeEntry(`pages/${page.slug}`, page.slug, page.html, null, () => ({ title: page.title }));
+  writeEntry('pages', `pages/${page.slug}`, page.slug, page.html, null, () => ({ title: page.title }));
 }
 
 writeFileSync(missingFile, `${JSON.stringify(missing, null, 2)}\n`);

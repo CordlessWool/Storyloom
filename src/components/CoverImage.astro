@@ -1,0 +1,20 @@
+---
+// Optimized cover image, local (imported via the content schema) or remote
+// (Unsplash URL, downloaded and processed at build time).
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata | string;
+  alt?: string;
+  widths: number[];
+  sizes: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+  [key: `data-${string}`]: string | undefined;
+}
+const { src, alt = '', ...rest } = Astro.props;
+---
+
+{typeof src === 'string' ? <Image src={src} alt={alt} inferSize {...rest} /> : <Image src={src} alt={alt} {...rest} />}

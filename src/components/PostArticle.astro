@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import CoverImage from './CoverImage.astro';
 import { render } from 'astro:content';
 import { formatDate, postUrl, readingTime, type BlogKey, type Post } from '../lib/site';
 
@@ -31,7 +31,7 @@ const { Content } = await render(post);
   </header>
   {cover && (
     <figure class="post-cover">
-      <Image
+      <CoverImage
         src={cover}
         alt={coverAlt ?? ''}
         widths={[640, 1024, 1600]}

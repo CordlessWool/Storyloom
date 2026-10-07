@@ -12,7 +12,8 @@ export default defineConfig({
   trailingSlash: 'always',
   integrations: [sitemap()],
   // Responsive srcset for every image, including the ones in Markdown.
-  image: { layout: 'constrained' },
+  // Remote covers (Unsplash) are downloaded and optimized at build time.
+  image: { layout: 'constrained', domains: ['images.unsplash.com'] },
   markdown: {
     // unified (remark/rehype) instead of the default Sätteri processor: the
     // image plugins need the mdast/hast trees.

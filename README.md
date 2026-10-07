@@ -23,32 +23,31 @@ npm run check     # type check
 
 ## Content
 
-Every post is a folder with an `index.md` and its images:
-
 ```
 src/content/
-  reisen/<trip>/<slug>/index.md     → /reisen/<trip>/<slug>/   (trip page: /reisen/<trip>/)
-  geschichten/<slug>/index.md       → /geschichten/<slug>/
-  rezepte/<slug>/index.md           → /rezepte/<slug>/
-  pages/<slug>/index.md             → /<slug>/   (Impressum, Über den Autor)
+  reisen/<trip>/<slug>.md      → /reisen/<trip>/<slug>/   (trip page: /reisen/<trip>/)
+  geschichten/<slug>.md        → /geschichten/<slug>/
+  rezepte/<slug>.md            → /rezepte/<slug>/
+  pages/<slug>.md              → /<slug>/   (Impressum, Über den Autor)
+  <blog>/_images/              images of that blog
 ```
 
 Frontmatter: `title`, `date`, optional `excerpt`, `lead` (show the excerpt as lead paragraph), `cover`, `coverAlt`, `coverCaption`, `tags`, `featured`, `draft`. Trip titles live in `TRIPS` in `src/lib/site.ts`.
 
 ### Images
 
-Put images next to `index.md`, name them after the post (`<slug>-cover.jpg`, `<slug>-01.jpg`, …) and reference them relatively:
+Put images into the blog's `_images/` folder, name them after the post (`<slug>-cover.jpg`, `<slug>-01.jpg`, …) and reference them relatively. `cover` can also be a remote URL from an allowed domain (`image.domains` in `astro.config.mjs`, currently Unsplash):
 
 ```md
-cover: "./aufbruch-cover.jpg"
+cover: "../_images/aufbruch-cover.jpg"
 
-![Loch Ness am Morgen](./aufbruch-01.jpg)
+![Loch Ness am Morgen](../_images/aufbruch-01.jpg)
 
-![](./aufbruch-02.jpg "Caption for the whole gallery")
-![](./aufbruch-03.jpg)
+![](../_images/aufbruch-02.jpg "Caption for the whole gallery")
+![](../_images/aufbruch-03.jpg)
 ```
 
-Astro optimizes every image at build time (WebP, responsive `srcset`). A paragraph that contains only images becomes a figure; more than one image becomes a gallery, and the title of the first image is the caption.
+Astro optimizes every image at build time (WebP, responsive `srcset`); remote covers are downloaded during the build and served from the site, so visitors never load from Unsplash. A paragraph that contains only images becomes a figure; more than one image becomes a gallery, and the title of the first image is the caption.
 
 Images that are referenced but missing show a placeholder instead of breaking the build. The 22 images missing from the Ghost backup are listed with their original file names in `scripts/missing-images.json`; once found:
 
@@ -64,4 +63,4 @@ The content was imported once from a Ghost backup:
 npm run import:ghost -- path/to/storyloom-backup
 ```
 
-The script overwrites `src/content/{reisen,geschichten,rezepte,pages}`, renames images after their post and downloads the Unsplash covers. Category and trip mapping live at the top of `scripts/import-ghost.mjs`.
+The script overwrites `src/content/{reisen,geschichten,rezepte,pages}`, renames images after their post and keeps Unsplash covers as URLs. Category and trip mapping live at the top of `scripts/import-ghost.mjs`.
