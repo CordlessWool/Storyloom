@@ -1,5 +1,5 @@
 // Static site on Cloudflare Workers. Cloudflare builds it on every push
-// (Workers Builds: build command `npm run build`, deploy command `npx wrangler deploy`).
+// (Workers Builds: build command `bun run build`, deploy command `bunx wrangler deploy`).
 {
   "name": "storyloom",
   "compatibility_date": "2026-10-07",
