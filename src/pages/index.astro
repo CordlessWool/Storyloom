@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { BLOG_LIST, SITE, getPosts, url } from '../lib/site';
+
+const blogs = await Promise.all(
+  BLOG_LIST.map(async (blog) => ({ ...blog, count: (await getPosts(blog.key)).length })),
+);
+---
+
+<BaseLayout>
+  <section class="intro">
+    <h1>{SITE.title}</h1>
+    <p>{SITE.description}</p>
+  </section>
+  <ul class="blog-picker">
+    {blogs.map((b) => (
+      <li>
+        <a href={url(`/${b.key}/`)}>
+          <h2>{b.title}</h2>
+          <p>{b.tagline}</p>
+          <span>{b.count} Beiträge</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

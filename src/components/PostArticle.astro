@@ -1,0 +1,56 @@
+---
+import CoverImage from './CoverImage.astro';
+import { render } from 'astro:content';
+import { formatDate, postUrl, readingTime, type BlogKey, type Post } from '../lib/site';
+
+interface Props {
+  post: Post;
+  blog: BlogKey;
+  newer?: Post;
+  older?: Post;
+  /** Mark the article as Pagefind search content. */
+  searchable?: boolean;
+}
+const { post, blog, newer, older, searchable = false } = Astro.props;
+const { title, date, excerpt, lead, cover, coverAlt, coverCaption, tags } = post.data;
+const { Content } = await render(post);
+---
+
+<article class="post" data-pagefind-body={searchable ? '' : undefined}>
+  <header>
+    <h1>{title}</h1>
+    <p class="post-meta">
+      <time datetime={date.toISOString()}>{formatDate(date)}</time>
+      · {readingTime(post)} Min. Lesezeit
+    </p>
+    {tags.length > 0 && (
+      <ul class="tags">
+        {tags.map((t) => <li data-pagefind-filter={searchable ? 'Kategorie' : undefined}>{t}</li>)}
+      </ul>
+    )}
+  </header>
+  {cover && (
+    <figure class="post-cover">
+      <CoverImage
+        src={cover}
+        alt={coverAlt ?? ''}
+        widths={[640, 1024, 1600]}
+        sizes="(min-width: 42rem) 42rem, 100vw"
+        loading="eager"
+        data-pagefind-meta={searchable ? 'image[src]' : undefined}
+      />
+      {coverCaption && <figcaption set:html={coverCaption} />}
+    </figure>
+  )}
+  {lead && excerpt && <p class="post-excerpt">{excerpt}</p>}
+  <div class="post-content">
+    <Content />
+  </div>
+</article>
+
+{(newer || older) && (
+  <nav class="post-nav" aria-label="Weitere Beiträge">
+    {older && <a rel="prev" href={postUrl(blog, older.id)}>← {older.data.title}</a>}
+    {newer && <a rel="next" href={postUrl(blog, newer.id)}>{newer.data.title} →</a>}
+  </nav>
+)}

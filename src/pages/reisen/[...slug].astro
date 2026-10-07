@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostArticle from '../../components/PostArticle.astro';
+import { BLOGS, getPosts, groupByTrip } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const trips = groupByTrip(await getPosts('reisen'));
+  // Previous/next stay within the trip, in diary order.
+  return trips.flatMap(({ posts }) =>
+    posts.map((post, i) => ({
+      params: { slug: post.id },
+      props: { post, older: posts[i - 1], newer: posts[i + 1] },
+    })),
+  );
+}
+
+const blog = BLOGS.reisen;
+const { post, newer, older } = Astro.props;
+---
+
+<BaseLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover} blog={blog.key}>
+  <PostArticle post={post} blog={blog.key} newer={newer} older={older} />
+</BaseLayout>
