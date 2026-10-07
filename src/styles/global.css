@@ -204,10 +204,9 @@ main.wrap {
 
 /* Three parts of the notebook in one mark */
 .brand-mark {
-  width: 0.95rem;
-  height: 0.95rem;
-  border-radius: 50%;
-  background: conic-gradient(var(--c-reisen) 0 120deg, var(--c-geschichten) 0 240deg, var(--c-rezepte) 0);
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .tabs {
