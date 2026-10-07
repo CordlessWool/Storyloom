@@ -29,7 +29,7 @@ Cloudflare Workers with static assets (`wrangler.jsonc`), built by Cloudflare on
 2. Build command `bun run build`, deploy command `bunx wrangler deploy`, production branch `main`.
 3. Other branches get preview URLs. Once a build looks right, add `storyloom.de` under the Worker's Settings → Domains & Routes.
 
-Cloudflare installs with Bun because of `bun.lock`; set `BUN_VERSION=1.3.14` as a build variable to match local. Astro itself runs on Node (`.node-version`). Unknown URLs get `404.html`.
+Cloudflare installs with Bun because of `bun.lock`; set `BUN_VERSION=1.3.14` as a build variable to match local. Astro itself runs on Node (`.node-version`). Unknown URLs get `404.html`. `public/_headers` lets browsers cache the hashed files in `/_astro/` for a year.
 
 ## Feeds and SEO
 
