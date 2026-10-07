@@ -1,0 +1,191 @@
+---
+// Search and tag filter in one place, part of the Rezepte header.
+// - No query: the tag chips filter the recipe cards (#recipe-grid).
+// - Query: Pagefind searches the recipes (restricted to the chosen tag via the
+//   "Kategorie" filter) and the hits replace the cards.
+// State is mirrored in ?q= and ?tag=. Pagefind's index only exists after
+// `npm run build`; without it the chips keep working and the field says so.
+import RecipeIcon from './RecipeIcon.astro';
+import { ICON_PATHS, iconKind, type IconKind } from './recipe-icons';
+import { url, type Post } from '../../lib/site';
+
+interface Props {
+  posts: Post[];
+}
+const { posts } = Astro.props;
+
+const counts = new Map<string, number>();
+for (const p of posts) for (const t of p.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+const tags = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'de'));
+
+const kinds = Object.keys(ICON_PATHS) as IconKind[];
+// Client-side copy of iconKind(): tag → icon for hits without a photo.
+const iconRules = JSON.stringify(['Kuchen', 'Backen', 'Kochen'].map((t) => [t, iconKind([t])]));
+---
+
+<div
+  class="finder"
+  data-ressort="rezepte"
+  data-bundle={url('/pagefind/')}
+  data-base={url('/')}
+  data-total={posts.length}
+  data-icons={iconRules}
+>
+  <form class="finder-field" role="search" onsubmit="return false">
+    <svg class="finder-glass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+      <circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5" />
+    </svg>
+    <label class="visually-hidden" for="recipe-q">Rezepte durchsuchen</label>
+    <input id="recipe-q" type="search" placeholder="Zutat oder Gericht, z. B. Quark" autocomplete="off" spellcheck="false" enterkeyhint="search" />
+    <output class="finder-count mono" for="recipe-q" aria-live="polite">{posts.length} Rezepte</output>
+  </form>
+
+  <div class="chips" role="group" aria-label="Nach Kategorie filtern">
+    <button type="button" data-tag="" aria-pressed="true">Alle</button>
+    {tags.map(([tag, n]) => (
+      <button type="button" data-tag={tag} aria-pressed="false">#{tag} <span class="mono">{n}</span></button>
+    ))}
+  </div>
+
+  <ol class="hits" id="recipe-hits" hidden></ol>
+  <p class="finder-empty" id="recipe-empty" hidden></p>
+
+  {kinds.map((k) => (
+    <template data-icon={k}><span class="recipe-tile recipe-tile--small"><RecipeIcon kind={k} /></span></template>
+  ))}
+</div>
+
+<script is:inline>
+  // The recipe cards come after this component, so wait for the full DOM.
+  const startRecipeFinder = () => {
+    const root = document.querySelector('.finder');
+    const input = root.querySelector('#recipe-q');
+    const count = root.querySelector('.finder-count');
+    const hits = root.querySelector('#recipe-hits');
+    const empty = root.querySelector('#recipe-empty');
+    const chips = [...root.querySelectorAll('.chips button')];
+    const grid = document.getElementById('recipe-grid');
+    const cards = grid ? [...grid.children] : [];
+    const total = Number(root.dataset.total);
+    const iconRules = JSON.parse(root.dataset.icons);
+
+    let tag = '';
+    let pagefind;
+    let pagefindFailed = false;
+    let run = 0;
+
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
+    const loadPagefind = async () => {
+      if (pagefind || pagefindFailed) return pagefind;
+      try {
+        pagefind = await import(`${root.dataset.bundle}pagefind.js`);
+        // The index is tiny; searching on the main thread avoids a worker
+        // start-up that can stall for seconds before falling back anyway.
+        await pagefind.options({ baseUrl: root.dataset.base, noWorker: true });
+        await pagefind.init();
+      } catch {
+        pagefindFailed = true;
+        pagefind = undefined;
+      }
+      return pagefind;
+    };
+
+    const syncUrl = (q) => {
+      const u = new URL(location.href);
+      q ? u.searchParams.set('q', q) : u.searchParams.delete('q');
+      tag ? u.searchParams.set('tag', tag) : u.searchParams.delete('tag');
+      history.replaceState(null, '', u);
+    };
+
+    const showCards = () => {
+      let shown = 0;
+      cards.forEach((el) => {
+        el.hidden = tag !== '' && !JSON.parse(el.dataset.tags).includes(tag);
+        if (!el.hidden) shown++;
+      });
+      grid?.classList.toggle('is-filtered', tag !== '');
+      if (grid) grid.hidden = false;
+      hits.hidden = true;
+      empty.hidden = shown > 0;
+      empty.textContent = 'Kein Rezept in dieser Kategorie. Wähle „Alle“, um alle zu sehen.';
+      count.textContent = tag ? `${plural(shown, 'Rezept', 'Rezepte')} mit #${tag}` : plural(total, 'Rezept', 'Rezepte');
+    };
+
+    const tile = (tags) => {
+      const kind = (iconRules.find(([t]) => tags.includes(t)) ?? [, 'schale'])[1];
+      return root.querySelector(`template[data-icon="${kind}"]`).innerHTML;
+    };
+
+    const renderHits = (q, results) => {
+      hits.innerHTML = results
+        .map((r) => {
+          const tags = r.filters?.Kategorie ?? [];
+          const media = r.meta?.image ? `<img src="${esc(r.meta.image)}" alt="" loading="lazy">` : tile(tags);
+          return `<li class="hit"><a href="${esc(r.url)}">
+            <span class="hit-media">${media}</span>
+            <span class="hit-body">
+              <span class="hit-title">${esc(r.meta?.title ?? '')}</span>
+              <span class="hit-excerpt">${r.excerpt}</span>
+              <span class="hit-meta mono">${tags.map((t) => `#${esc(t)}`).join(' ')}</span>
+            </span></a></li>`;
+        })
+        .join('');
+      hits.hidden = results.length === 0;
+      if (grid) grid.hidden = true;
+      empty.hidden = results.length > 0;
+      empty.textContent = `Kein Rezept enthält „${q}“${tag ? ` in #${tag}` : ''}. Versuch es mit einer Zutat, z. B. Mehl oder Eier.`;
+      count.textContent = `${plural(results.length, 'Treffer', 'Treffer')}`;
+    };
+
+    const update = async () => {
+      const q = input.value.trim();
+      const mine = ++run;
+      syncUrl(q);
+      if (!q) return showCards();
+      if (!pagefind && !pagefindFailed) count.textContent = 'Suche läuft …';
+      const pf = await loadPagefind();
+      if (mine !== run) return;
+      if (!pf) {
+        count.textContent = 'Suche nach dem Build verfügbar';
+        return showCards();
+      }
+      const search = await pf.search(q, tag ? { filters: { Kategorie: tag } } : {});
+      const results = await Promise.all(search.results.slice(0, 20).map((r) => r.data()));
+      if (mine === run) renderHits(q, results);
+    };
+
+    let timer;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(update, 180);
+    });
+    input.addEventListener('focus', loadPagefind, { once: true });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && input.value) {
+        input.value = '';
+        update();
+      }
+    });
+    chips.forEach((b) =>
+      b.addEventListener('click', () => {
+        tag = b.dataset.tag;
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+        update();
+      }),
+    );
+
+    const params = new URLSearchParams(location.search);
+    const initialTag = params.get('tag');
+    const initialChip = chips.find((c) => c.dataset.tag === initialTag);
+    if (initialChip) {
+      tag = initialTag;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === initialChip)));
+    }
+    input.value = params.get('q') ?? '';
+    if (input.value || tag) update();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startRecipeFinder);
+  else startRecipeFinder();
+</script>

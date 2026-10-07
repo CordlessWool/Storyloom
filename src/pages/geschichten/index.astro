@@ -1,16 +1,40 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostList from '../../components/PostList.astro';
-import { BLOGS, getPosts } from '../../lib/site';
+import GeschichtenLayout from '../../layouts/GeschichtenLayout.astro';
+import BlogFront from '../../components/BlogFront.astro';
+import { BLOGS, getPosts, postUrl, readingTime } from '../../lib/site';
 
 const blog = BLOGS.geschichten;
 const posts = await getPosts(blog.key);
+const years = [...new Set(posts.map((p) => p.data.date.getFullYear()))];
+const dayMonth = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit' });
 ---
 
-<BaseLayout title={blog.title} description={blog.description} blog={blog.key}>
-  <header class="blog-header">
-    <h1>{blog.title}</h1>
-    <p>{blog.tagline}</p>
-  </header>
-  <PostList posts={posts} blog={blog.key} />
-</BaseLayout>
+<GeschichtenLayout title={blog.title} description={blog.description}>
+  <BlogFront blog={blog} count={posts.length} stat={`${posts.length} Texte aus ${years.length} Jahren`} />
+
+  <nav class="contents" aria-label="Inhalt">
+    {years.map((year) => (
+      <section class="contents-year" aria-labelledby={`y${year}`}>
+        <h2 id={`y${year}`} class="mono">{year}</h2>
+        <ol class="ledger">
+          {posts
+            .filter((p) => p.data.date.getFullYear() === year)
+            .map((post) => (
+              <li>
+                <a href={postUrl(blog.key, post.id)}>
+                  <span class="ledger-margin mono">
+                    <time datetime={post.data.date.toISOString()}>{dayMonth.format(post.data.date)}</time>
+                  </span>
+                  <span class="ledger-body">
+                    <span class="ledger-title">{post.data.title}</span>
+                    {post.data.excerpt && <span class="ledger-excerpt">{post.data.excerpt}</span>}
+                  </span>
+                  <span class="ledger-aside mono">{readingTime(post)} Min.</span>
+                </a>
+              </li>
+            ))}
+        </ol>
+      </section>
+    ))}
+  </nav>
+</GeschichtenLayout>

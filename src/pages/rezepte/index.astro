@@ -1,18 +1,18 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostList from '../../components/PostList.astro';
-import RecipeSearch from '../../components/RecipeSearch.astro';
+import RezepteLayout from '../../layouts/RezepteLayout.astro';
+import BlogFront from '../../components/BlogFront.astro';
+import RecipeSearch from '../../components/rezepte/RecipeSearch.astro';
+import RecipeGrid from '../../components/rezepte/RecipeGrid.astro';
 import { BLOGS, getPosts } from '../../lib/site';
 
 const blog = BLOGS.rezepte;
 const posts = await getPosts(blog.key);
 ---
 
-<BaseLayout title={blog.title} description={blog.description} blog={blog.key}>
-  <header class="blog-header">
-    <h1>{blog.title}</h1>
-    <p>{blog.tagline}</p>
-  </header>
-  <RecipeSearch />
-  <PostList posts={posts} blog={blog.key} />
-</BaseLayout>
+<RezepteLayout title={blog.title} description={blog.description}>
+  <div class="recipes-head">
+    <BlogFront blog={blog} count={posts.length} stat="" />
+    <RecipeSearch posts={posts} />
+  </div>
+  <RecipeGrid posts={posts} />
+</RezepteLayout>

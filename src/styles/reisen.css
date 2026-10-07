@@ -1,0 +1,360 @@
+/* Reisen: trips as cards, each trip as a day-by-day timeline. */
+
+.trip-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trip-cards a {
+  display: grid;
+  height: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+
+.trip-cards a:hover,
+.trip-cards a:focus-visible {
+  border-color: var(--sec);
+}
+
+.trip-card-media {
+  aspect-ratio: 16 / 8;
+  background: var(--surface-2);
+}
+
+.trip-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trip-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 1.1rem 1.3rem 1.25rem;
+}
+
+.trip-card-name {
+  margin-bottom: 0.3rem;
+  font-size: 1.6rem;
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.trip-card-meta {
+  color: var(--muted);
+}
+
+.trip {
+  margin-top: clamp(4rem, 8vw, 5.5rem);
+  scroll-margin-top: 5rem;
+}
+
+.trip-head {
+  display: grid;
+  grid-template-columns: var(--margin) minmax(0, 1fr);
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.trip-head h2 {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  padding-left: 1.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.4rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+
+.trip-head p {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  padding-right: 1.25rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* Day counter in the margin */
+.ledger--days .day {
+  color: var(--sec-ink);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.ledger--days time {
+  font-size: 0.72rem;
+}
+
+/* "Schottland | Tag 3" on a travel entry */
+.day-badge {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--sec);
+  border-radius: 999px;
+  overflow: hidden;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.day-badge-trip {
+  padding: 0.25rem 0.6rem 0.25rem 0.7rem;
+}
+
+.day-badge-day {
+  padding: 0.3rem 0.7rem 0.25rem 0.6rem;
+  background: color-mix(in srgb, var(--sec) 18%, transparent);
+  color: var(--sec-ink);
+  font-weight: 600;
+}
+
+.day-badge:hover .day-badge-day {
+  background: var(--sec);
+  color: var(--on-accent);
+}
+
+@media (max-width: 640px) {
+  .trip-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .trip-head h2,
+  .trip-head p {
+    grid-column: 1;
+    padding: 0;
+    text-align: left;
+  }
+
+  .trip-head p {
+    grid-row: 2;
+    margin-top: 0.25rem;
+  }
+
+  .ledger--days .ledger-margin {
+    padding-top: 1.1rem;
+  }
+}
+
+/* ---------- Image handling (from 7a, in notebook language) ---------- */
+
+/* Ring: a photo framed by a thin accent ring with a gap, the Reisen signature */
+.ring {
+  margin: 0;
+  padding: 6px;
+  border: 1.5px solid var(--sec);
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+.ring img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  background: var(--surface-2);
+}
+
+.reisen-front {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+}
+
+.ring--front {
+  width: clamp(11rem, 22vw, 17rem);
+  margin: clamp(2rem, 5vw, 3.5rem) 0;
+}
+
+/* Timeline: the day number sits in a ring on the rule, the photo gets room */
+.ledger--days .ledger-body {
+  padding-left: 2.6rem;
+}
+
+.ledger--days .ledger-body::before {
+  display: none;
+}
+
+.ledger--days .ledger-margin {
+  padding-top: 1.35rem;
+  padding-right: 2.25rem;
+}
+
+.ledger--days .ledger-margin time {
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+.ledger--days .ledger-margin span {
+  font-size: 0.72rem;
+}
+
+.day-ring {
+  position: absolute;
+  top: 1rem;
+  left: calc(-1.3rem - 0.5px);
+  display: grid;
+  place-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 1.5px solid var(--sec);
+  border-radius: 50%;
+  background: var(--bg);
+  text-align: center;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+
+.day-ring-label {
+  color: var(--muted);
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.day-ring-num {
+  margin-top: 0.1rem;
+  color: var(--sec-ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.ledger--days a:hover .day-ring,
+.ledger--days a:focus-visible .day-ring {
+  background: var(--sec);
+}
+
+.ledger--days a:hover .day-ring-label,
+.ledger--days a:hover .day-ring-num,
+.ledger--days a:focus-visible .day-ring-label,
+.ledger--days a:focus-visible .day-ring-num {
+  color: var(--bg);
+}
+
+.ledger--days .ledger-title {
+  padding-top: 0.45rem;
+}
+
+.stage-photo {
+  padding: 1rem 0 1rem 1rem;
+}
+
+.stage-photo img {
+  width: 10.5rem;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+
+/* Travel entry: the photo opens the page, wider than the text */
+.entry-hero {
+  margin: clamp(1.5rem, 4vw, 2.5rem) 0 0;
+}
+
+.entry-hero img {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  max-height: 72vh;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.entry-hero figcaption {
+  margin-top: 0.6rem;
+  text-align: right;
+}
+
+.entry--after-hero {
+  margin-top: clamp(2rem, 5vw, 3rem);
+}
+
+/* Galleries break out of the text column to the right */
+@media (min-width: 1100px) {
+  html[data-blog='reisen'] .prose .gallery {
+    width: calc(100% + 12rem);
+  }
+}
+
+html[data-blog='reisen'] .prose .gallery img {
+  border-radius: 10px;
+}
+
+@media (max-width: 900px) {
+  .stage-photo img {
+    width: 8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .reisen-front {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ring--front {
+    display: none;
+  }
+
+  .ledger--days {
+    margin-left: 1.1rem;
+  }
+
+  .ledger--days .ledger-margin {
+    padding: 1rem 0 0 2.1rem;
+  }
+
+  .ledger--days .ledger-body {
+    padding-left: 2.1rem;
+  }
+
+  .day-ring {
+    top: -1.35rem;
+    left: calc(-1.05rem - 0.5px);
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  .day-ring-label {
+    display: none;
+  }
+
+  .day-ring-num {
+    margin: 0;
+    font-size: 0.8rem;
+  }
+
+  .ledger--days .ledger-title {
+    padding-top: 0;
+  }
+
+  .stage-photo {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    padding: 1rem 0 1rem 0.75rem;
+  }
+
+  .stage-photo img {
+    width: 5.5rem;
+  }
+
+  .entry-hero img {
+    aspect-ratio: 4 / 3;
+  }
+}

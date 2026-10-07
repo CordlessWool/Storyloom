@@ -1,17 +1,20 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostArticle from '../../components/PostArticle.astro';
-import { BLOGS, adjacent, getPosts } from '../../lib/site';
+import RezepteLayout from '../../layouts/RezepteLayout.astro';
+import RecipeArticle from '../../components/rezepte/RecipeArticle.astro';
+import { render } from 'astro:content';
+import { adjacent, getPosts } from '../../lib/site';
 
 export async function getStaticPaths() {
   const posts = await getPosts('rezepte');
   return posts.map((post) => ({ params: { slug: post.id }, props: { post, ...adjacent(posts, post.id) } }));
 }
 
-const blog = BLOGS.rezepte;
 const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
 ---
 
-<BaseLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover} blog={blog.key}>
-  <PostArticle post={post} blog={blog.key} newer={newer} older={older} searchable />
-</BaseLayout>
+<RezepteLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover}>
+  <RecipeArticle post={post} newer={newer} older={older}>
+    <Content />
+  </RecipeArticle>
+</RezepteLayout>

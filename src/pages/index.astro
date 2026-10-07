@@ -1,26 +1,72 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { BLOG_LIST, SITE, getPosts, url } from '../lib/site';
+import { BLOGS, BLOG_LIST, SITE, getPosts, postUrl, url } from '../lib/site';
 
-const blogs = await Promise.all(
-  BLOG_LIST.map(async (blog) => ({ ...blog, count: (await getPosts(blog.key)).length })),
+const short = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' });
+
+const sections = await Promise.all(
+  BLOG_LIST.map(async (blog) => {
+    const posts = await getPosts(blog.key);
+    const years = posts.map((p) => p.data.date.getFullYear());
+    return {
+      ...blog,
+      posts,
+      span: `${Math.min(...years)}–${Math.max(...years)}`,
+    };
+  }),
 );
+
+const recent = sections
+  .flatMap((s) => s.posts.map((post) => ({ post, blog: s.key })))
+  .sort((a, b) => b.post.data.date.valueOf() - a.post.data.date.valueOf())
+  .slice(0, 8);
 ---
 
 <BaseLayout>
   <section class="intro">
     <h1>{SITE.title}</h1>
-    <p>{SITE.description}</p>
+    <p>Ein Notizbuch in drei Teilen: Reisetagebücher, Geschichten und Rezepte. Wähle, wo du weiterlesen willst.</p>
   </section>
-  <ul class="blog-picker">
-    {blogs.map((b) => (
-      <li>
-        <a href={url(`/${b.key}/`)}>
-          <h2>{b.title}</h2>
-          <p>{b.tagline}</p>
-          <span>{b.count} Beiträge</span>
+
+  <ul class="sections" aria-label="Teile des Notizbuchs">
+    {sections.map((s) => (
+      <li data-ressort={s.key}>
+        <a class="section-card" href={url(`/${s.key}/`)}>
+          <span class="section-tab">
+            <span class="dot" aria-hidden="true"></span>
+            {s.title}
+          </span>
+          <span class="section-tagline">{s.tagline}</span>
+          <span class="section-stat mono">{s.posts.length} Einträge, {s.span}</span>
+          <span class="section-peek" aria-hidden="true">
+            {s.posts.slice(0, 3).map((p) => (
+              <span class="peek-row">
+                <span class="mono">{short.format(p.data.date)}</span>
+                <span class="peek-title">{p.data.title}</span>
+              </span>
+            ))}
+          </span>
         </a>
       </li>
     ))}
   </ul>
+
+  <section class="recent" aria-labelledby="recent-title">
+    <h2 id="recent-title">Zuletzt geschrieben</h2>
+    <ol class="ledger">
+      {recent.map(({ post, blog }) => (
+        <li data-ressort={blog}>
+          <a href={postUrl(blog, post.id)}>
+            <span class="ledger-margin mono">
+              <time datetime={post.data.date.toISOString()}>{short.format(post.data.date)}</time>
+            </span>
+            <span class="ledger-body">
+              <span class="ledger-title">{post.data.title}</span>
+              <span class="ledger-where">{BLOGS[blog].title}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
 </BaseLayout>

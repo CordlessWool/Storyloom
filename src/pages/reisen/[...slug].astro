@@ -1,23 +1,29 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import ReisenLayout from '../../layouts/ReisenLayout.astro';
 import PostArticle from '../../components/PostArticle.astro';
-import { BLOGS, getPosts, groupByTrip } from '../../lib/site';
+import { BLOGS, getPosts, url } from '../../lib/site';
+import { dayOf, groupTrips } from '../../lib/trips';
 
 export async function getStaticPaths() {
-  const trips = groupByTrip(await getPosts('reisen'));
-  // Previous/next stay within the trip, in diary order.
-  return trips.flatMap(({ posts }) =>
-    posts.map((post, i) => ({
+  const trips = groupTrips(await getPosts('reisen'));
+  // Previous/next day within the same trip, not across trips.
+  return trips.flatMap((trip) =>
+    trip.posts.map((post, i) => ({
       params: { slug: post.id },
-      props: { post, older: posts[i - 1], newer: posts[i + 1] },
+      props: { post, trip, older: trip.posts[i - 1], newer: trip.posts[i + 1] },
     })),
   );
 }
 
 const blog = BLOGS.reisen;
-const { post, newer, older } = Astro.props;
+const { post, trip, older, newer } = Astro.props;
 ---
 
-<BaseLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover} blog={blog.key}>
-  <PostArticle post={post} blog={blog.key} newer={newer} older={older} />
-</BaseLayout>
+<ReisenLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover}>
+  <PostArticle post={post} blog={blog.key} newer={newer} older={older} olderLabel="Vorige Etappe" newerLabel="Nächste Etappe" heroCover>
+    <a slot="kicker" class="day-badge" href={url(`/reisen/${trip.key}/`)} title={`Alle Etappen: ${trip.name}`}>
+      <span class="day-badge-trip">{trip.name}</span>
+      <span class="day-badge-day mono">Tag {String(dayOf(trip, post)).padStart(2, '0')}</span>
+    </a>
+  </PostArticle>
+</ReisenLayout>

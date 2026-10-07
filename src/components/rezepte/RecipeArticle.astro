@@ -1,0 +1,98 @@
+---
+// Recipe page: the ingredients stay in view in the left column while the
+// method scrolls on the right. Recipes without a recognisable ingredient
+// block fall back to a single column.
+//
+// The page passes <Content /> as slot: rendering it here gives the final HTML
+// with optimized images (post.rendered.html only has image placeholders).
+import CoverImage from '../CoverImage.astro';
+import IngredientPanel from './IngredientPanel.astro';
+import { extractRecipe, ingredientCount } from './recipe-parts';
+import { postUrl, readingTime, url, type Post } from '../../lib/site';
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+const { post, newer, older } = Astro.props;
+const { title, date, excerpt, lead, cover, coverAlt, coverCaption, tags } = post.data;
+
+const html = await Astro.slots.render('default');
+const parts = html ? extractRecipe(html) : undefined;
+const twoColumn = !!parts && parts.groups.length > 0;
+const count = parts ? ingredientCount(parts) : 0;
+
+// A bold phrase on its own line at the start of a paragraph is a step label
+// ("Zubereitung des Teigs"). Marked here because CSS :first-child ignores text
+// before the <strong>, which turned bold words mid-sentence into labels.
+const labelSteps = (h: string) =>
+  h.replace(/<p>\s*<strong>([^<]*)<\/strong>(?=\s*(?:<br\s*\/?>|<\/p>))/g, '<p><strong class="step-label">$1</strong>');
+const methodHtml = html ? labelSteps(twoColumn ? parts!.method : html) : undefined;
+
+const photo = cover;
+const numeric = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+---
+
+<article class="recipe-page" data-ressort="rezepte" data-pagefind-body>
+  <header class="recipe-head">
+    <div class="recipe-topline" data-pagefind-ignore>
+      <a class="text-link" href={url('/rezepte/')}>Alle Rezepte</a>
+      <button type="button" class="button" onclick="window.print()">Rezept drucken</button>
+    </div>
+    <h1>{title}</h1>
+    {lead && excerpt && <p class="recipe-lead">{excerpt}</p>}
+    <div class="recipe-meta">
+      <p class="mono" data-pagefind-ignore>
+        <time datetime={date.toISOString()}>{numeric.format(date)}</time>
+        <span>{readingTime(post)} Min. Lesezeit</span>
+      </p>
+      {tags.length > 0 && (
+        <ul class="hashtags" aria-label="Kategorien">
+          {tags.map((t) => <li data-pagefind-filter="Kategorie">{t}</li>)}
+        </ul>
+      )}
+    </div>
+  </header>
+
+  {photo && (
+    <figure class="recipe-photo">
+      <CoverImage
+        src={photo}
+        alt={coverAlt ?? ''}
+        widths={[640, 1024, 1600]}
+        sizes="(min-width: 64rem) 60rem, 100vw"
+        loading="eager"
+        data-pagefind-meta="image[src]"
+      />
+      {coverCaption && <figcaption set:html={coverCaption} />}
+    </figure>
+  )}
+
+  <div class:list={['recipe-layout', { 'recipe-layout--single': !twoColumn }]}>
+    {twoColumn && <IngredientPanel groups={parts!.groups} facts={parts!.facts} count={count} />}
+    <div class="recipe-method">
+      {twoColumn && <h2 class="method-title" data-pagefind-ignore>Zubereitung</h2>}
+      <div class="prose">
+        <Fragment set:html={methodHtml} />
+      </div>
+    </div>
+  </div>
+</article>
+
+{(newer || older) && (
+  <nav class="pager pager--recipe" aria-label="Weitere Rezepte" data-ressort="rezepte">
+    {older && (
+      <a rel="prev" href={postUrl('rezepte', older.id)}>
+        <span class="mono">Älteres Rezept</span>
+        {older.data.title}
+      </a>
+    )}
+    {newer && (
+      <a rel="next" href={postUrl('rezepte', newer.id)}>
+        <span class="mono">Neueres Rezept</span>
+        {newer.data.title}
+      </a>
+    )}
+  </nav>
+)}

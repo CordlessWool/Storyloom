@@ -1,0 +1,53 @@
+---
+import CoverImage from './CoverImage.astro';
+import { postUrl, url } from '../lib/site';
+import { dayOf, tripPeriod, type Trip } from '../lib/trips';
+
+interface Props {
+  trip: Trip;
+  /** Show the trip title and period (off on the trip page, whose header has them). */
+  showHead?: boolean;
+}
+const { trip, showHead = true } = Astro.props;
+
+const short = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' });
+const weekday = new Intl.DateTimeFormat('de-DE', { weekday: 'short' });
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section class="trip" id={trip.key} aria-labelledby={showHead ? `${trip.key}-title` : undefined} aria-label={showHead ? undefined : trip.name}>
+  {showHead && (
+    <header class="trip-head">
+      <h2 id={`${trip.key}-title`}><a href={url(`/reisen/${trip.key}/`)}>{trip.name}</a></h2>
+      <p class="mono">{tripPeriod(trip)}</p>
+    </header>
+  )}
+  <ol class="ledger ledger--days">
+    {trip.posts.map((post) => {
+      const day = dayOf(trip, post);
+      return (
+        <li>
+          <a href={postUrl('reisen', post.id)}>
+            <span class="ledger-margin">
+              <time class="mono" datetime={post.data.date.toISOString()}>{short.format(post.data.date)}</time>
+              <span class="mono">{weekday.format(post.data.date)}</span>
+            </span>
+            <span class="ledger-body">
+              <span class="day-ring" aria-label={`Tag ${day}`}>
+                <span class="day-ring-label" aria-hidden="true">Tag</span>
+                <span class="day-ring-num mono" aria-hidden="true">{pad(day)}</span>
+              </span>
+              <span class="ledger-title">{post.data.title}</span>
+              {post.data.excerpt && <span class="ledger-excerpt">{post.data.excerpt}</span>}
+            </span>
+            {post.data.cover && (
+              <span class="stage-photo">
+                <CoverImage src={post.data.cover} alt="" widths={[240, 480]} sizes="11rem" />
+              </span>
+            )}
+          </a>
+        </li>
+      );
+    })}
+  </ol>
+</section>
