@@ -12,24 +12,24 @@ Personal blog with three sections, built with [Astro](https://astro.build):
 ## Commands
 
 ```sh
-npm install
-npm run dev       # dev server (recipe search unavailable here)
-npm run build     # static build to dist/ + Pagefind search index
-npm run preview   # serve dist/ — use this to try the search
-npm run check     # type check
+bun install
+bun run dev       # dev server (recipe search unavailable here)
+bun run build     # static build to dist/ + Pagefind search index
+bun run preview   # serve dist/ — use this to try the search
+bun run check     # type check
 ```
 
-`BASE_PATH=/sub/ npm run build` builds the site for a sub-path.
+`BASE_PATH=/sub/ bun run build` builds the site for a sub-path.
 
 ## Deployment
 
 Cloudflare Workers with static assets (`wrangler.jsonc`), built by Cloudflare on every push:
 
 1. Cloudflare dashboard → Workers & Pages → Create → Import a repository → `CordlessWool/Storyloom`.
-2. Build command `npm run build`, deploy command `npx wrangler deploy`, production branch `main`.
+2. Build command `bun run build`, deploy command `bunx wrangler deploy`, production branch `main`.
 3. Other branches get preview URLs. Once a build looks right, add `storyloom.de` under the Worker's Settings → Domains & Routes.
 
-Node version comes from `.node-version`. Unknown URLs get `404.html`.
+Cloudflare installs with Bun because of `bun.lock`; set `BUN_VERSION=1.3.14` as a build variable to match local. Astro itself runs on Node (`.node-version`). Unknown URLs get `404.html`.
 
 ## Content
 
@@ -64,7 +64,7 @@ Astro optimizes every image at build time (WebP, responsive `srcset`); remote co
 Images that are referenced but missing show a placeholder instead of breaking the build. The 22 images missing from the Ghost backup are listed with their original file names in `scripts/missing-images.json`; once found:
 
 ```sh
-npm run restore:images -- path/to/folder-with-originals
+bun run restore:images path/to/folder-with-originals
 ```
 
 ## Design
@@ -78,7 +78,7 @@ Travel posts are numbered by day within their trip (`src/lib/trips.ts`); the tim
 The content was imported once from a Ghost backup:
 
 ```sh
-npm run import:ghost -- path/to/storyloom-backup
+bun run import:ghost path/to/storyloom-backup
 ```
 
 The script overwrites `src/content/{reisen,geschichten,rezepte,pages}`, renames images after their post and keeps Unsplash covers as URLs. Category and trip mapping live at the top of `scripts/import-ghost.mjs`.
