@@ -29,7 +29,9 @@ const ogImage = image ? await ogImageUrl(image, Astro.site!) : undefined;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href={url('/favicon.ico')} sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+    <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
     <link rel="sitemap" href={url('/sitemap-index.xml')} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
