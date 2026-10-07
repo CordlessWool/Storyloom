@@ -10,8 +10,6 @@ interface Props {
   older?: Post;
   /** Mark the article as Pagefind search content. */
   searchable?: boolean;
-  /** Show the cover image (Geschichten are text only). */
-  showCover?: boolean;
   /** Labels for the older/newer links. */
   olderLabel?: string;
   newerLabel?: string;
@@ -26,7 +24,6 @@ const {
   newer,
   older,
   searchable = false,
-  showCover = true,
   olderLabel = 'Älterer Eintrag',
   newerLabel = 'Neuerer Eintrag',
   heroCover = false,
@@ -34,8 +31,7 @@ const {
 } = Astro.props;
 const { title, date, excerpt, lead, cover, coverAlt, coverCaption, tags } = post.data;
 const { Content } = await render(post);
-const img = showCover ? cover : undefined;
-const hero = heroCover ? img : undefined;
+const hero = heroCover ? cover : undefined;
 const shownTags = tags.filter((t) => !hideTags.includes(t));
 const numeric = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 const weekday = new Intl.DateTimeFormat('de-DE', { weekday: 'long' });
@@ -68,10 +64,10 @@ const weekday = new Intl.DateTimeFormat('de-DE', { weekday: 'long' });
   <div class="entry-main">
     <h1>{title}</h1>
     {lead && excerpt && <p class="entry-lead">{excerpt}</p>}
-    {img && !heroCover && (
+    {cover && !heroCover && (
       <figure class="entry-cover">
         <CoverImage
-          src={img}
+          src={cover}
           alt={coverAlt ?? ''}
           widths={[640, 1024, 1600]}
           sizes="(min-width: 48rem) 41rem, 100vw"
