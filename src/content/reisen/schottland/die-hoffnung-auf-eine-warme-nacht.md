@@ -3,7 +3,7 @@ title: "Die Hoffnung auf eine warme Nacht"
 date: "2014-09-12T00:00:00.000+02:00"
 updated: "2023-04-11T17:37:05.000+02:00"
 excerpt: "Ich mache mich auf den Weg die letzten 3 Kilometer bis Fort William hinter mich zu bringen. Die Hoffnung auf ein bequemes Bett ist eine große Hoffnung, denn letzte Nacht bin ich mit Rückenschmerzen aufgewacht. Wärme technisch geht es wieder seit ich wieder etwas aus den Bergen raus bin und näher an der Küste.\n\n\nNur die harten kommen in Garten\n\nWeiter geht es. Leider hatte keines der Hostel noch einen freien Platz und auch die Touristen Information konnte mir nicht weiterhelfen. Auch einer von dr"
-cover: "../_images/die-hoffnung-auf-eine-warme-nacht-cover.jpg"
+cover: "./_images/die-hoffnung-auf-eine-warme-nacht-cover.jpg"
 tags: []
 ---
 

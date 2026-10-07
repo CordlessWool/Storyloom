@@ -3,7 +3,7 @@ title: "Die letzten Kilometer"
 date: "2014-09-16T00:00:00.000+02:00"
 updated: "2023-04-11T17:57:46.000+02:00"
 excerpt: "Es ist noch früh am morgen, aber ich kann nicht mehr schlafen und ich höre auch schon das Hostel rufen. Als Frühstück gönne ich mir heute nur einen der Protein Schokoladenriegel — die wie ich feststellen musste schrecklich schmecken. Da es vermutlich nur noch Bergab geht, sollten die letzten Kilometer gut zu schaffen sein. Die Temperaturen waren trotz Regen sehr angenehm heute Nacht.\n\n\nDuschen\n\nIch habe ein Hostel gefunden in dem ich für zwei Tage bleiben werde, bevor ich verfrüht meine Heimreis"
-cover: "../_images/die-letzten-kilometer-cover.jpg"
+cover: "./_images/die-letzten-kilometer-cover.jpg"
 tags: []
 ---
 

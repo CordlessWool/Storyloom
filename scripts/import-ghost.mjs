@@ -2,9 +2,11 @@
 //
 // Usage: node scripts/import-ghost.mjs <path-to-backup>
 //
-// Posts become src/content/<blog>/[<trip>/]<slug>.md; their images go to one
-// folder per blog, src/content/<blog>/_images/, named after the post
-// (<slug>-cover.jpg, <slug>-01.jpg, ...). Unsplash covers stay remote URLs
+// Posts become src/content/<blog>/[<trip>/]<slug>.md. Images are named after
+// the post and stored
+//   - recipes: next to the recipe, cover <slug>.jpg, others <slug>-01.jpg, ...
+//   - travel posts: <trip>/_images/, cover <slug>-cover.jpg, others <slug>-01.jpg
+//   - everything else: <blog>/_images/, same names as travel posts. Unsplash covers stay remote URLs
 // (Astro optimizes them at build time). Images missing from the backup are
 // still referenced under their new name and listed in
 // scripts/missing-images.json, so scripts/restore-images.mjs can put the
@@ -70,22 +72,24 @@ function cleanTags(tags) {
     .map((t) => t.name.replace(/^#/, '').trim());
 }
 
-/** Copies the images of one entry into its blog's _images folder, named after its slug. */
+/** Copies the images of one entry into `imagesDir`, named after its slug. */
 class EntryImages {
-  constructor(entryFile, imagesDir, slug) {
+  constructor(entryFile, imagesDir, slug, coverName) {
     this.imagesDir = imagesDir;
     this.slug = slug;
+    this.coverName = coverName;
     this.prefix = relative(dirname(entryFile), imagesDir) || '.';
     this.count = 0;
     this.names = new Map();
   }
 
-  name(url, suffix) {
+  name(url, isCover = false) {
     if (!GHOST_IMAGE_URL.test(url)) return url; // remote (Unsplash): optimized by Astro at build time
     if (this.names.has(url)) return this.names.get(url);
     const clean = url.split('?')[0];
     const ext = extname(clean).toLowerCase().replace('.jpeg', '.jpg');
-    const name = `${this.slug}-${suffix ?? String(++this.count).padStart(2, '0')}${ext}`;
+    const base = isCover ? this.coverName : `${this.slug}-${String(++this.count).padStart(2, '0')}`;
+    const name = `${base}${ext}`;
     const ref = `${this.prefix.startsWith('.') ? '' : './'}${this.prefix}/${name}`;
     this.names.set(url, ref);
 
@@ -136,8 +140,11 @@ function frontmatter(data) {
 function writeEntry(blog, entryPath, slug, html, coverUrl, data) {
   const file = join(contentDir, `${entryPath}.md`);
   mkdirSync(dirname(file), { recursive: true });
-  current = new EntryImages(file, join(contentDir, blog, '_images'), slug);
-  const cover = coverUrl ? current.name(coverUrl, 'cover') : undefined;
+  current =
+    blog === 'rezepte'
+      ? new EntryImages(file, dirname(file), slug, slug)
+      : new EntryImages(file, join(dirname(file), '_images'), slug, `${slug}-cover`);
+  const cover = coverUrl ? current.name(coverUrl, true) : undefined;
   const body = turndown.turndown(html ?? '');
   writeFileSync(file, `${frontmatter(data(cover))}\n${body}\n`);
 }

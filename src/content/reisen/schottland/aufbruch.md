@@ -3,7 +3,7 @@ title: "Aufbruch"
 date: "2014-09-03T00:00:00.000+02:00"
 updated: "2023-04-11T16:25:32.000+02:00"
 excerpt: "Ich habe mein Hostel in Glasgow verlassen, nachdem ich meinen Tank an Gesellschaft gefüllt habe, in dem ich durch ein paar Bars getingelt bin. Zwar blieb der Abend ruhig, dennoch waren ein paar nette Gespräche dabei. Auch habe ich mir noch einen Tip für ein gutes English/Schottisches Frühstück geben lassen, dass ich gerade Verzehrt habe und nun nieder Schreiben will, was ich da eigentlich Verzehrt habe ohne es in allen Details zu wissen: Fried Egg’s, Bacon, Ramsay of Carluke Lorne Sausage, Black"
-cover: "../_images/aufbruch-cover.jpg"
+cover: "./_images/aufbruch-cover.jpg"
 tags: []
 ---
 

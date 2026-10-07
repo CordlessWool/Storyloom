@@ -3,7 +3,7 @@ title: "Weisbrot / Toastbrot"
 date: "2018-09-23T18:09:19.000+02:00"
 updated: "2023-04-08T23:13:12.000+02:00"
 excerpt: "Es ist lange her, dass ich Brot gebacken habe und damals war es auch eine Fertigbackmischung. Nun das erste Brot ohne Backmischung...\n\nVorneweg, die meiste Zeit wird benötigt, um den Teig ruhen zu lassen. Ingesammt sollten allein dafür passive 2,5 bis 3 Stunden eingeplant werden.\n\n\nZutaten:\n\n\n * 1kg Mehl\n * 500ml Wasser\n * 1 Würfel frische Hefe (42g)\n * 100ml Milch\n * 1el Salz\n * 1el Zucker\n\n\nZeitaufwand:\n\n\n * ca. 30min Zubereitung\n * 2,5 bis 3h Ruhen\n * 20 bis 30min Backen\n\n\nTemperatur:\n\n180°C "
-cover: "./_images/weisbrot-toastbrot-cover.jpg"
+cover: "./weisbrot-toastbrot.jpg"
 tags: ["Backen","Kochen"]
 ---
 

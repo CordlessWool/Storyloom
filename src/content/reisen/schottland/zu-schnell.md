@@ -3,7 +3,7 @@ title: "Zu schnell"
 date: "2014-09-08T00:00:00.000+02:00"
 updated: "2023-04-11T17:18:15.000+02:00"
 excerpt: "Es liegen bereits 90km hinter mir, ich komme gut voran. Das lässt mir etwas Zeit und ich muss mir Gedanken machen, dass ich nicht zu früh an meinem Ziel Inverness ankomme. Wie gehofft bleibt mir somit Zeit einen oder zwei Tage an einem Ort zu verweilen. Ursprünglich hatte ich als Puffer eingeplant am Loch Ness noch einige Nächte verbringen zu können, doch wie mir die Karte Zeit ist dieses rechts und links von einer Straße gesäumt und lädt damit nur bedingt zum verweilen ein. Ich sollte mir also "
-cover: "../_images/zu-schnell-cover.jpg"
+cover: "./_images/zu-schnell-cover.jpg"
 tags: []
 ---
 
@@ -25,9 +25,9 @@ Es ist erstaunlich wie sehr man die Straße wahrnimmt, obwohl man sie kaum sieht
 
 Das mein Zelt gut getarnt ist mit seiner grünen Farbe, doch bei mir wäre ich davon ausgegangen, dass man mich gut sehen würde. Doch vermutlich war die junge Dame, die beim umherblicken sich stark auf den Weg konzentrierte um nach Wanderern Ausschau zu halten so auf den Weg konzentriert das Sie gar nicht bemerkte, dass sie sich genau in meine Richtung hinsetzte um Ihre Notdurft zu verrichten. Wohl über mich hinwegblickend merkte sie meine Anwesenheit wohl erst hinter. Für mich als stillen bioachter ein insgesamt lustiges Schauspiel, für sie vermutlich etwas peinlich.
 
-![](../_images/zu-schnell-01.jpg)
-![](../_images/zu-schnell-02.jpg)
-![](../_images/zu-schnell-03.jpg)
-![](../_images/zu-schnell-04.jpg)
-![](../_images/zu-schnell-05.jpg)
-![](../_images/zu-schnell-06.jpg)
+![](./_images/zu-schnell-01.jpg)
+![](./_images/zu-schnell-02.jpg)
+![](./_images/zu-schnell-03.jpg)
+![](./_images/zu-schnell-04.jpg)
+![](./_images/zu-schnell-05.jpg)
+![](./_images/zu-schnell-06.jpg)

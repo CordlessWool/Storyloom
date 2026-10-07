@@ -3,7 +3,7 @@ title: "Wärme"
 date: "2014-09-14T00:00:00.000+02:00"
 updated: "2023-04-11T17:44:50.000+02:00"
 excerpt: "Ob es nur an der Höhenlage liegt, dass die Nächte wieder wärmer sind. Kurz vor Inverness erwarten mich noch ein paar Höhenmeter und ich werde es vermutlich erproben können. Leider lässt mir mein Rücken keine ruhe und mich nicht durchschlafen. Tagsüber beim Wandern merke ich nichts von den Schmerzen, trotzdem schwerem Rucksack. Erst wenn ich eine weile geschlafen habe, weckt er mich zuverlässig auf.\n\n\nFort Augustus\n\nDie Wasserquellen mit Frischwasser sind rar und ich musste erneut nach Wasser fra"
-cover: "../_images/warme-cover.jpg"
+cover: "./_images/warme-cover.jpg"
 tags: []
 ---
 

@@ -3,7 +3,7 @@ title: "Nebel"
 date: "2014-09-13T00:00:00.000+02:00"
 updated: "2023-04-11T17:41:10.000+02:00"
 excerpt: "Die Sonne versucht den grauen Himmel zu durchbrechen und schafft es an einigen den Grund zu berühren. Mein Glück mit dem Wetter scheint sich zu wandeln, aber was wäre eine Englandreise ohne Regenwetter gewesen. Leider wird mein Rücken nicht besser und ich habe heute nacht kaum geschlafen. Nun ist es nicht mehr die Kälte die mir zu schaffen macht — sogar meinen Schlafsack musste ich aufmachen weil mir zu warm war — sondern mein Rücken. Ich werde schauen, ob ich Magnesium Tabletten besorgen kann u"
-cover: "../_images/nebel-cover.jpg"
+cover: "./_images/nebel-cover.jpg"
 tags: []
 ---
 
@@ -21,8 +21,8 @@ Auf meiner Wanderrute, was es bisher nicht außergewöhnlich das ein Bahnhof etw
 
 Mir gefallen die Highland und die Menschen und ich könnte mir vorstellen hier eines Tages zu leben, etwas abseits eines Dorfes mitten in der Natur. Doch wer mag wissen was die Zukunft bringt, auf jeden Fall möchte ich erneut hier her kommen und die Berge bereisen, zwar nicht alleine und nicht zu Fuß, aber Schottland.
 
-![](../_images/nebel-01.jpg)
-![](../_images/nebel-02.jpg)
-![](../_images/nebel-03.jpg)
-![](../_images/nebel-04.jpg)
-![](../_images/nebel-05.jpg)
+![](./_images/nebel-01.jpg)
+![](./_images/nebel-02.jpg)
+![](./_images/nebel-03.jpg)
+![](./_images/nebel-04.jpg)
+![](./_images/nebel-05.jpg)

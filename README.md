@@ -26,25 +26,27 @@ npm run check     # type check
 ```
 src/content/
   reisen/<trip>/<slug>.md      → /reisen/<trip>/<slug>/   (trip page: /reisen/<trip>/)
+  reisen/<trip>/_images/       images of that trip: <slug>-cover.jpg, <slug>-01.jpg, …
   geschichten/<slug>.md        → /geschichten/<slug>/
+  geschichten/_images/         <slug>-cover.jpg, <slug>-01.jpg, …
   rezepte/<slug>.md            → /rezepte/<slug>/
+  rezepte/<slug>.jpg           cover, named like the recipe; more images <slug>-01.jpg, …
   pages/<slug>.md              → /<slug>/   (Impressum, Über den Autor)
-  <blog>/_images/              images of that blog
 ```
 
 Frontmatter: `title`, `date`, optional `excerpt`, `lead` (show the excerpt as lead paragraph), `cover`, `coverAlt`, `coverCaption`, `tags`, `featured`, `draft`. Trip titles live in `TRIPS` in `src/lib/site.ts`.
 
 ### Images
 
-Put images into the blog's `_images/` folder, name them after the post (`<slug>-cover.jpg`, `<slug>-01.jpg`, …) and reference them relatively. `cover` can also be a remote URL from an allowed domain (`image.domains` in `astro.config.mjs`, currently Unsplash):
+Put images where the tree above shows, name them after the post and reference them relatively. `cover` can also be a remote URL from an allowed domain (`image.domains` in `astro.config.mjs`, currently Unsplash):
 
 ```md
-cover: "../_images/aufbruch-cover.jpg"
+cover: "./_images/aufbruch-cover.jpg"
 
-![Loch Ness am Morgen](../_images/aufbruch-01.jpg)
+![Loch Ness am Morgen](./_images/aufbruch-01.jpg)
 
-![](../_images/aufbruch-02.jpg "Caption for the whole gallery")
-![](../_images/aufbruch-03.jpg)
+![](./_images/aufbruch-02.jpg "Caption for the whole gallery")
+![](./_images/aufbruch-03.jpg)
 ```
 
 Astro optimizes every image at build time (WebP, responsive `srcset`); remote covers are downloaded during the build and served from the site, so visitors never load from Unsplash. A paragraph that contains only images becomes a figure; more than one image becomes a gallery, and the title of the first image is the caption.

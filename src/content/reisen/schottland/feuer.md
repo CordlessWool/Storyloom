@@ -3,7 +3,7 @@ title: "Feuer"
 date: "2014-09-11T00:00:00.000+02:00"
 updated: "2023-04-11T17:33:42.000+02:00"
 excerpt: "Ich bin kurz vor Fort William, meiner Hoffnung auf einen warmen Schlafplatz. Ich habe mich dennoch noch einmal dafür entschieden mein Zelt auf zu schlagen, da ich mir mehr Hoffnungen mache einen platz im Hostel zu bekommen, wenn ich morgens anreise. Außerdem habe ich dann morgen den ganzen Tag Zeit den Ort zu erkunden. Der Platz unter den Kiefern ist sehr einladend und die Nadeln haben eine Prima Zündgrundlage gegeben, so das ich an meinem ersten komplett selbst entzündeten Feuer sitze und den A"
-cover: "../_images/feuer-cover.jpg"
+cover: "./_images/feuer-cover.jpg"
 tags: []
 ---
 
@@ -17,7 +17,7 @@ Ich laufe durch einen tiefen Wald, rechts von mir Bäume. Ein wunderschöner Ort
 
 Es kam ein junger Metaller vorbei der mich direkt angesprochen hat, da er eine Zeitlang selbst direkt an der Stelle gezeltet hat. Ich weis nicht mehr von wo er ursprünglich kam, aber er war wohl die ersten Wochen Obdachlos als er nach Schottland kam und hat genau an der gleichen stelle kampiert.
 
-![](../_images/feuer-01.jpg)
-![](../_images/feuer-02.jpg)
-![](../_images/feuer-03.jpg)
-![](../_images/feuer-04.jpg)
+![](./_images/feuer-01.jpg)
+![](./_images/feuer-02.jpg)
+![](./_images/feuer-03.jpg)
+![](./_images/feuer-04.jpg)

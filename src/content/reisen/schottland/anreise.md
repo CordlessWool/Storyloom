@@ -3,7 +3,7 @@ title: "Anreise"
 date: "2014-09-02T00:00:00.000+02:00"
 updated: "2024-02-06T00:47:08.000+01:00"
 excerpt: "Ich beginne mit meinen ersten Worten in einem leeren Buch, eingezwängt zwischen Flugzeugaußenwand und meinem Sitznachbarn. Ich habe meinen Platz erreicht, während alle anderen noch Ihr Gepäck verstauen und den Gang belagern, als würden sie nicht wollen, dass irgendjemand das Flugzeug wieder verlässt. Glücklicherweise ist die dies nicht meine Absicht, auch wenn sich ein leicht mulmiges Gefühl in meinem Magen breit macht. Die Anspannung kommt nicht vor der Angst des Fliegens, auch wenn ich ich die"
-cover: "../_images/anreise-cover.jpg"
+cover: "./_images/anreise-cover.jpg"
 tags: []
 ---
 

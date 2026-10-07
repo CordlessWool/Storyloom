@@ -3,7 +3,7 @@ title: "Der frühe Vogel fängt den Wurm"
 date: "2014-09-15T00:00:00.000+02:00"
 updated: "2023-04-11T17:49:30.000+02:00"
 excerpt: "Ich bin heute morgen früh aufgebrochen und habe noch nichts gegessen. Die Sonne steht noch nicht besonders hoch, doch ich habe beschlossen eine Rast zu machen und mir Tortellini zu kochen — die einziehe Packung die ich dabei habe. Den Couscous den ich seit Fort William mit mir rumschleppe werde ich den Waldbewohnern überlassen, auch wenn es mir schwer fällt essen weg zu werfen und dann auch noch in die Natur, doch die Freude auf die Tortellini ist zu groß.\n\n\nNach dem Essen ist vor dem Essen\n\nNac"
-cover: "../_images/der-fruhe-vogel-fangt-den-wurm-cover.jpg"
+cover: "./_images/der-fruhe-vogel-fangt-den-wurm-cover.jpg"
 tags: []
 ---
 

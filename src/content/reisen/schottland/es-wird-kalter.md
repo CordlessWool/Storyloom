@@ -3,7 +3,7 @@ title: "Es wird kälter"
 date: "2014-09-09T00:00:00.000+02:00"
 updated: "2023-04-11T17:22:50.000+02:00"
 excerpt: "Bis jetzt habe ich noch keine Nacht durchgeschlafen und die Kälte beschäftigt mich immer mehr. Dabei sind die Temperaturen über den Tag verteilt sehr unterschiedlich. Am Abend wenn ich mich in den Schlafsack kuschele, ist es noch recht warm — fast etwas zu Warm im Schlafsack. Nachts wache ich auf, leicht fröstelnd und am nächsten morgen schwitze ich fast. Daran hat heute Nacht auch nichts, dass ich mich zusätzlich mit meinem Kilt zugedeckt habe. Dabei merkt man sofort, wenn die Sonne untergegang"
-cover: "../_images/es-wird-kalter-cover.jpg"
+cover: "./_images/es-wird-kalter-cover.jpg"
 tags: []
 ---
 
@@ -28,6 +28,6 @@ Ich werde wohl ein wenig Variieren in den Dingen die ich unternehme, um gegen di
 
 Vermutlich wird mich jeder auslachen der dies ließt, doch welche Variation wird die beste sein und wird es überhaupt viel bringen oder nur die Luft im Zelt verschlechtern.
 
-![](../_images/es-wird-kalter-01.jpg)
-![](../_images/es-wird-kalter-02.jpg)
-![](../_images/es-wird-kalter-03.jpg)
+![](./_images/es-wird-kalter-01.jpg)
+![](./_images/es-wird-kalter-02.jpg)
+![](./_images/es-wird-kalter-03.jpg)

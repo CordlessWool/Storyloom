@@ -18,10 +18,10 @@ Bevor die anderen Abends abreisen würden, wollten wir noch ein wenig zusammen d
 
 Varanasi selbst, ist ein spiritueller Ort für Hindus und Sikhs. So gibt es viele Tempel und entlang des Ganges einige Krematorien sowie Verbrennungsstellen. Durch die Verbrennung findet an diesem heiligem Ort eine Reinigung des Karmas statt, damit die Seele den Körper verlassen kann. Um die Seele nicht daran zu hindern im Körper zu verweilen, sollen keinen Tränen vergossen werden. Da Frauen anscheinend eher Tränen vergießen als Männer war unter den Angehörigen nie ein Frau aus zu machen. Die Verbrennungen finden, entlang des Ganges an mehreren Stellen in der Stadt statt und sind öffentlich. Es stört sich niemand daran, wenn man Verbrennung in gebührendem Abstand beiwohnt. Zwar finden die Verbrennung den ganzen Tag statt dennoch beschlossen wir erst Abends eine Verbrennung auf zu suchen.
 
-![](../_images/varanasi-als-kulturelle-statte-01.jpg)
-![](../_images/varanasi-als-kulturelle-statte-02.jpg)
-![](../_images/varanasi-als-kulturelle-statte-03.jpg)
-![](../_images/varanasi-als-kulturelle-statte-04.jpg)
+![](./_images/varanasi-als-kulturelle-statte-01.jpg)
+![](./_images/varanasi-als-kulturelle-statte-02.jpg)
+![](./_images/varanasi-als-kulturelle-statte-03.jpg)
+![](./_images/varanasi-als-kulturelle-statte-04.jpg)
 
 Nach dem wir Mittags mit den anderen bereits an einer der Stellen vorbei kamen, suchten wir diese Abends erneut auf und hatten das Glück von Beginn an einer Verbrennung beiwohnen zu können.  
 Der Körper wird auf einer Trage aus Bambus herbeigetragen. Nach dem Körper an einer geeigneten Stelle mit dem Gestelle abgelegt wird, beginnt das Aufschichten des Holzes. An den Verbrennungsstätten liegen dafür Unmengen von großen Holzstämmen bereit. Nach dem professionellen Aufschichten des Holzes wird der Leichnam mit samt Tüchern, welche den ganzen Körper und auch das Gesicht verhüllen auf das Holzbett gelegt. Anschließend werden Körper und Holzstapel mit einer Flüssigkeit übergossen und etwas, dass den Anschein von Holzspänen macht bestreut. Die Bambustrage und alles andere was nicht mit dem Leichnam verbrannt wird und für das Ritual benötigt wird, landet achtlos auf einem Stapel mit Überresten voriger Verbrennungen.

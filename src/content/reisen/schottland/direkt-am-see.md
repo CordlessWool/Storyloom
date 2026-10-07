@@ -3,7 +3,7 @@ title: "Direkt am See"
 date: "2014-09-06T00:00:00.000+02:00"
 updated: "2023-04-11T17:09:03.000+02:00"
 excerpt: "Mein Zeltplatz ist wunderschön. Ich bin direkt am Ufer des Loch und mein Zelteingang zeigt direkt auf den See. Ich bin nicht weit weg vom Weg, scheine aber eine Abzweigung genommen zu haben die nicht stark frequentiert wird. Einzige getrübt wird das ganze von meinem immer noch nassen Schuhen. Selbst mein T-Shirt ist nicht getrocknet und so fröstelt es mich gerade etwas. Doch die Sonne will mir meine sorgen nehmen und mich freundlich Grüßen. Ich überlege fast mein Zelt stehen zu lassen und eine w"
-cover: "../_images/direkt-am-see-cover.jpg"
+cover: "./_images/direkt-am-see-cover.jpg"
 tags: []
 ---
 

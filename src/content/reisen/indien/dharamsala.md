@@ -24,15 +24,15 @@ Die Ort ist wesentlich angenehmer als Delhi, alleine weil nicht so viele Abgase 
 
 Dharamsala liegt nahe der tibetischen grenze und ist Exil des Dalai lama. Dem entsprechen sind auf den Straßen viele tibetische Mönche unterwegs und in der Stadt gibt es einige Tempel. Auch wenn immer wieder eine Bauruine am Straßenrand zu finden ist wirkt die Stadt im großen und ganzen wohlhabender. Leider haben wir bereits ein Rückfahrtticket für den nächsten Abend, ansonsten würde ich hier gerne noch einen Tag verbringen.
 
-![](../_images/dharamsala-01.jpg "@Koala")
-![](../_images/dharamsala-02.jpg)
-![](../_images/dharamsala-03.jpg)
-![](../_images/dharamsala-04.jpg)
-![](../_images/dharamsala-05.jpg)
-![](../_images/dharamsala-06.jpg)
-![](../_images/dharamsala-07.jpg)
-![](../_images/dharamsala-08.jpg)
-![](../_images/dharamsala-09.jpg)
+![](./_images/dharamsala-01.jpg "@Koala")
+![](./_images/dharamsala-02.jpg)
+![](./_images/dharamsala-03.jpg)
+![](./_images/dharamsala-04.jpg)
+![](./_images/dharamsala-05.jpg)
+![](./_images/dharamsala-06.jpg)
+![](./_images/dharamsala-07.jpg)
+![](./_images/dharamsala-08.jpg)
+![](./_images/dharamsala-09.jpg)
 
 Der zweite Tag wird etwas von Geldmangel überschattet. Wenn wir das Hotel bezahlen bleibt nicht mehr genug für die Taxifahrt und wie sich herausstellt ist an Geld zu kommen gar nicht so einfach. Die Geldautomaten scheinen immer mehr zu sein und werden nur 1 mal pro Tag gefüllt, zumindest 2 der Automaten. Um zumindest einigermaßen Geld zu haben, tauschten wir 20 € zu einem schlechten Wechselkurs von 60:1 der dennoch der beste des ganzen Ortes war. Um nicht den ganzen Tag in der Schlange zu stehen holten wir uns weitere 5000 Indische Rupien bei Western Uion trotz frechen 10% gebühren.
 

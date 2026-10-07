@@ -3,7 +3,7 @@ title: "Russischer Zupfkuchen"
 date: "2018-08-21T01:04:42.000+02:00"
 updated: "2023-04-08T23:15:05.000+02:00"
 excerpt: "Ich weiß zwar gar nicht mehr, wie ich dazu kam, mir russischen Zupfkuchen zu backen, dennoch ist er eigentlich die Anfangsmotivation für diesen Blog / dieses Archiv, da ich ein echt gutes Rezept auf irgendeiner kleinen Seite gefunden hatte. Doch eines Tages war die ganze Seite offline. Dies ist jetzt eine modifizierte Version aus dem Rezeptbuch meiner Großmutter.\n\n\nTeig:\n\n\n * 250g Mehl\n * 125g Butter\n * 125g Zucker\n * 35g Kakao\n * 1 Ei\n * 1/2 Päckchen Backpulver\n\n\nFüllung:\n\n\n * 500g Quark\n * 125"
-cover: "./_images/russischer-zupfkuchen-cover.jpg"
+cover: "./russischer-zupfkuchen.jpg"
 tags: ["Backen","Kuchen"]
 ---
 
@@ -45,4 +45,4 @@ Nachdem die Füllung in die Form gegeben worden ist, muss nur noch der restliche
 
 Ich kann zwar auch nie abwahrten, bis der Kuchen kalt ist, doch richtig gut schmeckt er erst, wenn er richtig abgekühlt ist. Dies kann je nach Wetter und Umgebungstemperatur ein paar Stunden dauern und stellt somit die größte Geduldsprobe dar.
 
-![](./_images/russischer-zupfkuchen-01.jpg)
+![](./russischer-zupfkuchen-01.jpg)

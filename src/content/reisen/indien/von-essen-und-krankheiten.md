@@ -21,15 +21,15 @@ Nach dem ich den ganzen gestrigen Tag im Bett verbrachte, geht es mir heute scho
 
 Nach dem wir noch ein wenig umher gelaufen sind, treibt es Laura wieder zum „Blue Lassi Shop“. Zwar sehen die Lassis sehr gut aus und werden mit frischen Früchten und zutatten zubreitet, doch ist meine Lust auf ungekochtet Lebenmittel vorerst doch zu stark gezügelt. Sollte ich allerdings noch einmal nach Varanasi kommen, steht einer der Lassis ganz oben auf meiner Todo Liste.
 
-![](../_images/von-essen-und-krankheiten-01.jpg)
-![](../_images/von-essen-und-krankheiten-02.jpg)
-![](../_images/von-essen-und-krankheiten-03.jpg)
-![](../_images/von-essen-und-krankheiten-04.jpg)
-![](../_images/von-essen-und-krankheiten-05.jpg)
-![](../_images/von-essen-und-krankheiten-06.jpg)
-![](../_images/von-essen-und-krankheiten-07.jpg)
-![](../_images/von-essen-und-krankheiten-08.jpg)
-![](../_images/von-essen-und-krankheiten-09.jpg)
+![](./_images/von-essen-und-krankheiten-01.jpg)
+![](./_images/von-essen-und-krankheiten-02.jpg)
+![](./_images/von-essen-und-krankheiten-03.jpg)
+![](./_images/von-essen-und-krankheiten-04.jpg)
+![](./_images/von-essen-und-krankheiten-05.jpg)
+![](./_images/von-essen-und-krankheiten-06.jpg)
+![](./_images/von-essen-und-krankheiten-07.jpg)
+![](./_images/von-essen-und-krankheiten-08.jpg)
+![](./_images/von-essen-und-krankheiten-09.jpg)
 
 > Im vergleich mit den bisher besuchten Städten ist Varanasi recht ordentlich und sauber. Zwar ist der Ganges durch Opfergaben, Boote und ähnliches stark verschmutzt, doch geben die Händler Essen und Getränke nicht in Plastikbechern oder -teller heraus, sondern in Tontöpchen und aus Blätter geflochtetenen Schalen. Beides fällt denoch als Mühl an und wird nicht gespühlt. Was mich etwas wundert, da   zumindest die Tongefässe gut verarbeitet wirken.
 

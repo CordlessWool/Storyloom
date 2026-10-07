@@ -4,7 +4,7 @@ date: "2018-03-08T20:52:23.000+01:00"
 updated: "2023-04-08T23:14:38.000+02:00"
 excerpt: "Einfach, schnell und gut klingend, dass waren die Anforderungen an das erste Rezept das ich aus den Kochbüchern meiner Großmutter umsetzen wollte. Die wahl viel auf Haselnusshalbmonde - eine gute Entscheidung. "
 lead: true
-cover: "./_images/haselnusshalbmond-cover.jpg"
+cover: "./haselnusshalbmond.jpg"
 tags: ["Backen","Omas Rezepte"]
 ---
 
@@ -30,4 +30,4 @@ Wie bei allen Keksen sollte beim Formen darauf geachtet werden, dass alle Kekse 
 
 Die Kekse brauchen etwas zum Zeit zum abkühlen und sind bis dahin sehr instabil - also vorsichtig vom Blech nehmen.
 
-![](./_images/haselnusshalbmond-01.jpg)
+![](./haselnusshalbmond-01.jpg)

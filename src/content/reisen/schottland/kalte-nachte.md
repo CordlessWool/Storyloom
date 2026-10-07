@@ -3,7 +3,7 @@ title: "Kalte Nächte"
 date: "2014-09-07T00:00:00.000+02:00"
 updated: "2024-02-06T01:40:21.000+01:00"
 excerpt: "Ich habe heute nacht Halstuch wiedergefunden. Glücklicherweise, da ich frierend aufgewacht bin.\n\n\nEinheimische\n\nIch habe heute schon wieder einen kurzen Plausch gehalten. Ein alter Mann hat mich angesprochen, während ich meine Wasserfalsche füllte und mich daran bekräftigt das Wasser mit gutem gewissen trinken zu können, er trinke es auch schon seit Jahren. Natürlich merken die Leute, spätestens wenn ich beginne zu reden, dass mein Kilt nur Tarnung ist, doch trotzdem sind Sie alle freundlich. De"
-cover: "../_images/kalte-nachte-cover.jpg"
+cover: "./_images/kalte-nachte-cover.jpg"
 tags: []
 ---
 
@@ -21,11 +21,11 @@ Ich habe mich entscheiden heute nach uneben zu liegen. Ich bin mir noch nicht si
 
 Manchmal ist es vermutlich auch ganz gut alleine zu reisen. Ich habe knapp mit Kleidung geplant, um mehr Platz für Lebensmittel zu haben. In dem Wissen alleine zu Reisen und eh lieber alle verscheuchend wollen, statt an zu ziehen hat mich der Gedanke auch nicht weiter gestört. Doch nun Rieche ich mich selbst — schrecklich. Ich bereu es mich gegen ein Bad entschieden zu haben, auch wenn es meine Socken und mein T-Shirt auch nicht gerettet hätte. Beides werde ich morgen auf meinem Rucksack befestigen und tagsüber auslüften lassen, in der Hoffnung es doch noch mal tragen zu können. Schließlich muss ich einen Teil meiner Wäsche auch für den Sprung in die Zivilisation aufbewahren. Die Nassen Schuhe haben aber sicher auch ihren Teil dazu beigetragen.
 
-![](../_images/kalte-nachte-01.jpg)
-![](../_images/kalte-nachte-02.jpg)
-![](../_images/kalte-nachte-03.jpg)
-![](../_images/kalte-nachte-04.jpg)
-![](../_images/kalte-nachte-05.jpg)
-![](../_images/kalte-nachte-06.jpg)
-![](../_images/kalte-nachte-07.jpg)
-![](../_images/kalte-nachte-08.jpg)
+![](./_images/kalte-nachte-01.jpg)
+![](./_images/kalte-nachte-02.jpg)
+![](./_images/kalte-nachte-03.jpg)
+![](./_images/kalte-nachte-04.jpg)
+![](./_images/kalte-nachte-05.jpg)
+![](./_images/kalte-nachte-06.jpg)
+![](./_images/kalte-nachte-07.jpg)
+![](./_images/kalte-nachte-08.jpg)

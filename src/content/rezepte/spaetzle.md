@@ -4,7 +4,7 @@ date: "2018-03-08T23:56:58.000+01:00"
 updated: "2024-05-25T12:54:59.000+02:00"
 excerpt: "Als Kind hätte ich am liebsten in Spätzle gebadet, vor allem wenn meine Oma sie gemacht hat. Es ist und bleibt die beste Nudel der Welt. Wobei es fast eine Schande ist, sie als Nudeln zu bezeichnen - es sind eben Spätzle."
 lead: true
-cover: "./_images/spaetzle-cover.jpg"
+cover: "./spaetzle.jpg"
 tags: ["Kochen","Schwäbisch","Traditionel"]
 featured: true
 ---
@@ -51,7 +51,7 @@ Nachdem die schweißtreibende Arbeit getan ist, müssen die Spätzle "nur noch" 
 5.  Nun kann wieder frischer Teig in das kochende Wasser geben werden (Schritt 1).
 6.  Gelegentlich ein wenig naschen ;)
 
-![](./_images/spaetzle-01.jpg "Das Rezept aus dem Kochbuch meiner Großmutter")
+![](./spaetzle-01.jpg "Das Rezept aus dem Kochbuch meiner Großmutter")
 
 **Geschabt (traditionel und Zeitaufwendiger)**  
 Ein Teil des Teiges wird auf ein möglichst dünnes feuchtes Holzbrettchen gleichmäßig verteilt. Anschließend werden schmale streifen mit einem Schaber (ich verwende hierfür einfach eine Küchenhand) in das kochende Wasser geschoben. Dabei fällt das Spätzle ins Wasser. Des ganze Bedarf etwas Übung, man wird mit der Zeit aber immer schneller.

@@ -3,7 +3,7 @@ title: "Kopfschmerzen"
 date: "2014-09-18T00:00:00.000+02:00"
 updated: "2023-04-11T18:04:00.000+02:00"
 excerpt: "Die Kopfschmerzen quälen mich weiter, vermutlich kommen Sie von den Verspannungen. Leider ist die Matratze auch etwas zu weich oder durchgelegen — von einem Extrem zum anderen. Dennoch kann ich mich nicht beschweren, da ich zumindest einmal die Nacht durchgeschlafen habe und erst mit dem klingeln des Weckers — den ich mir geliehen habe — aufgewacht bin. Eigentlich hätte ich heute noch ausschlafen können, doch ich wollte erproben, ob mich der Wecker morgen verlässlich wecken kann. Gestärkt mit ei"
-cover: "../_images/kopfschmerzen-cover.jpg"
+cover: "./_images/kopfschmerzen-cover.jpg"
 tags: []
 ---
 
