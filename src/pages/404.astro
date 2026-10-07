@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/site';
+---
+
+<BaseLayout title="Nicht gefunden">
+  <article class="entry entry--plain">
+    <div class="entry-main">
+      <h1>Seite nicht gefunden</h1>
+      <div class="prose">
+        <p>Diese Seite gibt es nicht (mehr). <a href={url('/')}>Zur Startseite</a></p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

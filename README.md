@@ -21,6 +21,16 @@ npm run check     # type check
 
 `BASE_PATH=/sub/ npm run build` builds the site for a sub-path.
 
+## Deployment
+
+Cloudflare Workers with static assets (`wrangler.jsonc`), built by Cloudflare on every push:
+
+1. Cloudflare dashboard → Workers & Pages → Create → Import a repository → `CordlessWool/Storyloom`.
+2. Build command `npm run build`, deploy command `npx wrangler deploy`, production branch `main`.
+3. Other branches get preview URLs. Once a build looks right, add `storyloom.de` under the Worker's Settings → Domains & Routes.
+
+Node version comes from `.node-version`. Unknown URLs get `404.html`.
+
 ## Content
 
 ```
