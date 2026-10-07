@@ -15,3 +15,10 @@ Never mention AI, assistants, tools, or anything pointing to automated authorshi
 - Never commit directly to `main`.
 - Every change goes on its own branch, e.g. `feat/<topic>`, `fix/<topic>`, `chore/<topic>`.
 - Merge into `main` only via pull request or after explicit approval.
+
+## Project notes
+
+- Astro 7. Markdown runs through the `unified()` processor (see `astro.config.mjs`) because `src/lib/local-images.mjs` rewrites image paths in raw HTML.
+- Internal links must go through `url()` / `postUrl()` from `src/lib/site.ts` so `BASE_PATH` builds keep working.
+- Recipe search (Pagefind) only exists after `npm run build`; test it with `npm run preview`.
+- Docs: https://docs.astro.build

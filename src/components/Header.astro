@@ -1,0 +1,17 @@
+---
+import { BLOG_LIST, SITE, url, type BlogKey } from '../lib/site';
+
+interface Props {
+  current?: BlogKey;
+}
+const { current } = Astro.props;
+---
+
+<header class="site-header">
+  <a class="site-title" href={url('/')}>{SITE.title}</a>
+  <nav aria-label="Blogs">
+    {BLOG_LIST.map((b) => (
+      <a href={url(`/${b.key}/`)} aria-current={b.key === current ? 'page' : undefined}>{b.title}</a>
+    ))}
+  </nav>
+</header>

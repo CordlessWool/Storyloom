@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { BLOGS, getPosts } from '../../lib/site';
+
+const blog = BLOGS.reisen;
+const posts = await getPosts(blog.key);
+---
+
+<BaseLayout title={blog.title} description={blog.description} blog={blog.key}>
+  <header class="blog-header">
+    <h1>{blog.title}</h1>
+    <p>{blog.tagline}</p>
+  </header>
+  <PostList posts={posts} blog={blog.key} />
+</BaseLayout>
