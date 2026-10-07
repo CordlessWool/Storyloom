@@ -31,6 +31,12 @@ Cloudflare Workers with static assets (`wrangler.jsonc`), built by Cloudflare on
 
 Cloudflare installs with Bun because of `bun.lock`; set `BUN_VERSION=1.3.14` as a build variable to match local. Astro itself runs on Node (`.node-version`). Unknown URLs get `404.html`.
 
+## Feeds and SEO
+
+- RSS: `/rss.xml` (all blogs) and `/<blog>/rss.xml`, linked in every page head
+- Sitemap: `/sitemap-index.xml`, referenced from `/robots.txt`
+- Posts get Open Graph article tags and `BlogPosting` structured data; descriptions are cut to 160 characters
+
 ## Content
 
 ```

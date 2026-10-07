@@ -19,7 +19,7 @@ const blog = BLOGS.reisen;
 const { post, trip, older, newer } = Astro.props;
 ---
 
-<ReisenLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover}>
+<ReisenLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover} post={post}>
   <PostArticle post={post} blog={blog.key} newer={newer} older={older} olderLabel="Vorige Etappe" newerLabel="Nächste Etappe" heroCover>
     <a slot="kicker" class="day-badge" href={url(`/reisen/${trip.key}/`)} title={`Alle Etappen: ${trip.name}`}>
       <span class="day-badge-trip">{trip.name}</span>

@@ -1,5 +1,6 @@
 ---
 import type { ImageMetadata } from 'astro';
+import type { Post } from '../lib/site';
 // Rezepte boundary: this layout, styles/rezepte.css, components/rezepte/* and
 // pages/rezepte/* are the only recipe-specific files.
 import BaseLayout from './BaseLayout.astro';
@@ -9,10 +10,11 @@ interface Props {
   title?: string;
   description?: string;
   image?: ImageMetadata | string;
+  /** The post shown on this page, for article metadata. */
+  post?: Post;
 }
-const { title, description, image } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} image={image} blog="rezepte">
+<BaseLayout {...Astro.props} blog="rezepte">
   <slot />
 </BaseLayout>
