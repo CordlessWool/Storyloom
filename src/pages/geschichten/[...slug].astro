@@ -12,6 +12,6 @@ const blog = BLOGS.geschichten;
 const { post, newer, older } = Astro.props;
 ---
 
-<GeschichtenLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover}>
+<GeschichtenLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover} post={post}>
   <PostArticle post={post} blog={blog.key} newer={newer} older={older} olderLabel="Vorherige Geschichte" newerLabel="Nächste Geschichte" />
 </GeschichtenLayout>

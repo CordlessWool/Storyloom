@@ -3,7 +3,7 @@ import type { ImageMetadata } from 'astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ogImageUrl } from '../lib/cover';
-import { SITE, url, type BlogKey } from '../lib/site';
+import { BLOGS, SITE, postUrl, url, type BlogKey, type Post } from '../lib/site';
 import '@fontsource-variable/geist';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
@@ -13,12 +13,42 @@ interface Props {
   description?: string;
   image?: ImageMetadata | string;
   blog?: BlogKey;
+  /** The post shown on this page, for article metadata. */
+  post?: Post;
 }
 
-const { title, description = SITE.description, image, blog } = Astro.props;
+const { title, image, blog, post } = Astro.props;
 const pageTitle = title ? `${title} – ${SITE.title}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? await ogImageUrl(image, Astro.site!) : undefined;
+
+// Ghost's auto excerpts are whole paragraphs; search results show about 160 characters.
+const full = (Astro.props.description ?? SITE.description).replace(/\s+/g, ' ').trim();
+const description = full.length > 160 ? `${full.slice(0, 157).replace(/\s+\S*$/, '')} …` : full;
+
+const feeds = [
+  ...(blog ? [{ title: `${BLOGS[blog].title} – ${SITE.title}`, href: url(`/${blog}/rss.xml`) }] : []),
+  { title: SITE.title, href: url('/rss.xml') },
+];
+
+const author = { '@type': 'Person', name: SITE.author };
+const jsonLd = post
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.data.title,
+      description,
+      datePublished: post.data.date.toISOString(),
+      dateModified: (post.data.updated ?? post.data.date).toISOString(),
+      url: new URL(postUrl(post.collection, post.id), Astro.site).href,
+      ...(ogImage && { image: ogImage }),
+      inLanguage: SITE.lang,
+      author,
+      ...(post.data.tags.length && { keywords: post.data.tags.join(', ') }),
+    }
+  : canonical.pathname === url('/')
+    ? { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.title, description, url: canonical.href, inLanguage: SITE.lang, author }
+    : undefined;
 ---
 
 <!doctype html>
@@ -33,10 +63,19 @@ const ogImage = image ? await ogImageUrl(image, Astro.site!) : undefined;
     <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
     <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
     <link rel="sitemap" href={url('/sitemap-index.xml')} />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={pageTitle} />
+    {feeds.map((f) => <link rel="alternate" type="application/rss+xml" title={f.title} href={f.href} />)}
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={post ? 'article' : 'website'} />
+    <meta property="og:title" content={title ?? SITE.title} />
     <meta property="og:description" content={description} />
     {ogImage && <meta property="og:image" content={ogImage} />}
+    {post && <meta property="article:published_time" content={post.data.date.toISOString()} />}
+    {post?.data.updated && <meta property="article:modified_time" content={post.data.updated.toISOString()} />}
+    {post?.data.tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <meta name="google-site-verification" content="MwdQnALvlvJWCwLvaxVHbzYztNc32H2DxHg3Di-WZf0" />
     <script is:inline>
       // Theme before first paint: saved choice, otherwise the system setting.
