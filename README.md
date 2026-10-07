@@ -23,11 +23,38 @@ npm run check     # type check
 
 ## Content
 
-Posts are Markdown files in `src/content/<blog>/`, pages (Impressum, Über den Autor) in `src/content/pages/`. Frontmatter: `title`, `date`, optional `excerpt`, `cover`, `coverAlt`, `coverCaption`, `tags`, `featured`, `draft`.
+Every post is a folder with an `index.md` and its images:
 
-Images live in `public/content/images/` and are referenced as `/content/images/...`. Images that are referenced but missing are replaced by a placeholder at build time — drop the file into place and rebuild to restore it.
+```
+src/content/
+  reisen/<trip>/<slug>/index.md     → /reisen/<trip>/<slug>/   (trip page: /reisen/<trip>/)
+  geschichten/<slug>/index.md       → /geschichten/<slug>/
+  rezepte/<slug>/index.md           → /rezepte/<slug>/
+  pages/<slug>/index.md             → /<slug>/   (Impressum, Über den Autor)
+```
 
-Each blog has its own route folder in `src/pages/<blog>/`, so a blog can get its own layout without affecting the others.
+Frontmatter: `title`, `date`, optional `excerpt`, `lead` (show the excerpt as lead paragraph), `cover`, `coverAlt`, `coverCaption`, `tags`, `featured`, `draft`. Trip titles live in `TRIPS` in `src/lib/site.ts`.
+
+### Images
+
+Put images next to `index.md`, name them after the post (`<slug>-cover.jpg`, `<slug>-01.jpg`, …) and reference them relatively:
+
+```md
+cover: "./aufbruch-cover.jpg"
+
+![Loch Ness am Morgen](./aufbruch-01.jpg)
+
+![](./aufbruch-02.jpg "Caption for the whole gallery")
+![](./aufbruch-03.jpg)
+```
+
+Astro optimizes every image at build time (WebP, responsive `srcset`). A paragraph that contains only images becomes a figure; more than one image becomes a gallery, and the title of the first image is the caption.
+
+Images that are referenced but missing show a placeholder instead of breaking the build. The 22 images missing from the Ghost backup are listed with their original file names in `scripts/missing-images.json`; once found:
+
+```sh
+npm run restore:images -- path/to/folder-with-originals
+```
 
 ## Ghost import
 
@@ -37,4 +64,4 @@ The content was imported once from a Ghost backup:
 npm run import:ghost -- path/to/storyloom-backup
 ```
 
-The script overwrites `src/content/{reisen,geschichten,rezepte,pages}`. Category mapping lives at the top of `scripts/import-ghost.mjs`.
+The script overwrites `src/content/{reisen,geschichten,rezepte,pages}`, renames images after their post and downloads the Unsplash covers. Category and trip mapping live at the top of `scripts/import-ghost.mjs`.

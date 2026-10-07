@@ -2,19 +2,23 @@
 //
 // Usage: node scripts/import-ghost.mjs <path-to-backup>
 //
-// Reads <backup>/data/{posts,pages}.json and <backup>/content/images, writes
-// Markdown into src/content/<blog>/ and copies images to public/content/images/.
-// Existing generated files are overwritten.
+// Every post becomes a folder with index.md and its images, named after the
+// post: src/content/<blog>/[<trip>/]<slug>/{index.md,<slug>-cover.jpg,<slug>-01.jpg,...}.
+// Unsplash covers are downloaded. Images missing from the backup are still
+// referenced under their new name and listed in scripts/missing-images.json,
+// so scripts/restore-images.mjs can put the originals in place later.
+// Existing generated folders are overwritten.
 
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { basename, extname, join, resolve } from 'node:path';
 import TurndownService from 'turndown';
 
 const backup = resolve(process.argv[2] ?? 'storyloom-backup-2026-10-07');
 const root = resolve(import.meta.dirname, '..');
 const contentDir = join(root, 'src/content');
+const missingFile = join(root, 'scripts/missing-images.json');
 
-const GHOST_IMAGE_URL = /https?:\/\/storyloom\.de\/content\/images\/(?:size\/w\d+\/)?/g;
+const GHOST_IMAGE_URL = /^https?:\/\/storyloom\.de\/content\/images\/(?:size\/w\d+\/)?/;
 
 // Ghost primary tag slug -> blog
 const BLOG_BY_TAG = {
@@ -28,13 +32,22 @@ const BLOG_BY_TAG = {
   backen: 'rezepte',
 };
 
-// Posts whose Ghost tags don't identify the blog
+// Posts whose Ghost tags don't identify the blog or trip
 const BLOG_BY_SLUG = {
   fruhstuck: 'reisen', // part of the 2014 Scotland diary
 };
+const TRIP_BY_SLUG = {
+  fruhstuck: 'schottland',
+};
 
-// Tags that only mirror the blog itself or are Ghost import noise
-const DROP_TAGS = new Set(['reisen', 'geschichten-3', 'gedanken-und-geschichten']);
+// Travel posts are grouped into one folder per trip
+const TRIPS = ['schottland', 'indien'];
+
+// Tags that only mirror the blog or trip itself, or are Ghost import noise
+const DROP_TAGS = new Set(['reisen', 'geschichten-3', 'gedanken-und-geschichten', ...TRIPS]);
+
+// Custom excerpts that only repeat the first paragraph: keep them as list teaser, not as lead
+const NO_LEAD = new Set(['fladle']);
 
 function blogFor(post) {
   if (BLOG_BY_SLUG[post.slug]) return BLOG_BY_SLUG[post.slug];
@@ -44,21 +57,51 @@ function blogFor(post) {
   throw new Error(`No blog for post "${post.slug}" — add it to BLOG_BY_SLUG`);
 }
 
+function tripFor(post) {
+  const trip = TRIP_BY_SLUG[post.slug] ?? post.tags.map((t) => t.slug).find((s) => TRIPS.includes(s));
+  if (!trip) throw new Error(`No trip for travel post "${post.slug}" — add it to TRIP_BY_SLUG`);
+  return trip;
+}
+
 function cleanTags(tags) {
   return tags
     .filter((t) => !DROP_TAGS.has(t.slug) && !t.slug.startsWith('hash-import'))
     .map((t) => t.name.replace(/^#/, '').trim());
 }
 
-function localizeImage(url) {
-  if (!url) return null;
-  return url.replace(GHOST_IMAGE_URL, '/content/images/');
+/** Copies (or downloads) the images of one entry and hands out names based on its slug. */
+class EntryImages {
+  constructor(dir, slug, entryPath) {
+    this.dir = dir;
+    this.slug = slug;
+    this.entryPath = entryPath;
+    this.count = 0;
+    this.names = new Map();
+    this.downloads = [];
+  }
+
+  name(url, suffix) {
+    if (this.names.has(url)) return this.names.get(url);
+    const clean = url.split('?')[0];
+    const ext = GHOST_IMAGE_URL.test(clean) ? extname(clean).toLowerCase().replace('.jpeg', '.jpg') : '.jpg';
+    const name = `${this.slug}-${suffix ?? String(++this.count).padStart(2, '0')}${ext}`;
+    this.names.set(url, `./${name}`);
+
+    if (GHOST_IMAGE_URL.test(clean)) {
+      const source = join(backup, 'content/images', clean.replace(GHOST_IMAGE_URL, ''));
+      if (existsSync(source)) copyFileSync(source, join(this.dir, name));
+      else missing.push({ file: `${this.entryPath}/${name}`, original: basename(source) });
+    } else {
+      this.downloads.push(download(url, join(this.dir, name)));
+    }
+    return `./${name}`;
+  }
 }
 
-function prepareHtml(html) {
-  return (html ?? '')
-    .replace(/\s(srcset|sizes)="[^"]*"/g, '')
-    .replace(GHOST_IMAGE_URL, '/content/images/');
+async function download(url, dest) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Download failed (${res.status}): ${url}`);
+  writeFileSync(dest, Buffer.from(await res.arrayBuffer()));
 }
 
 const turndown = new TurndownService({
@@ -67,8 +110,27 @@ const turndown = new TurndownService({
   bulletListMarker: '-',
   emDelimiter: '_',
 });
-// Galleries and captioned images have no Markdown equivalent; keep them as HTML.
-turndown.keep(['figure']);
+
+let current; // EntryImages of the entry being converted
+
+const image = (img, title) => {
+  const alt = (img.getAttribute('alt') ?? '').replace(/[[\]]/g, '');
+  const src = current.name(img.getAttribute('src'));
+  return `![${alt}](${src}${title ? ` "${title.replace(/"/g, "'")}"` : ''})`;
+};
+
+// Ghost image and gallery cards become plain Markdown images on consecutive lines
+// (one paragraph). The site renders such paragraphs as a figure / gallery; the
+// title of the first image is the caption.
+turndown.addRule('figure', {
+  filter: 'figure',
+  replacement: (_, node) => {
+    const caption = node.getElementsByTagName('figcaption')[0]?.textContent.trim();
+    const images = Array.from(node.getElementsByTagName('img')).map((img, i) => image(img, i === 0 && caption));
+    return images.length ? `\n\n${images.join('\n')}\n\n` : '';
+  },
+});
+turndown.addRule('img', { filter: 'img', replacement: (_, node) => image(node) });
 
 function frontmatter(data) {
   const lines = Object.entries(data)
@@ -77,55 +139,48 @@ function frontmatter(data) {
   return `---\n${lines.join('\n')}\n---\n`;
 }
 
-function writeEntry(dir, slug, data, html) {
+/** `data` gets the relative cover path (if any) and returns the frontmatter. */
+async function writeEntry(entryPath, slug, html, coverUrl, data) {
+  const dir = join(contentDir, entryPath);
   mkdirSync(dir, { recursive: true });
-  const body = turndown.turndown(prepareHtml(html));
-  writeFileSync(join(dir, `${slug}.md`), `${frontmatter(data)}\n${body}\n`);
+  current = new EntryImages(dir, slug, `src/content/${entryPath}`);
+  const cover = coverUrl ? current.name(coverUrl, 'cover') : undefined;
+  const body = turndown.turndown(html ?? '');
+  writeFileSync(join(dir, 'index.md'), `${frontmatter(data(cover))}\n${body}\n`);
+  await Promise.all(current.downloads);
 }
 
 const { posts } = JSON.parse(readFileSync(join(backup, 'data/posts.json'), 'utf8'));
 const { pages } = JSON.parse(readFileSync(join(backup, 'data/pages.json'), 'utf8'));
+const missing = [];
 
-for (const blog of new Set(Object.values(BLOG_BY_TAG))) {
-  rmSync(join(contentDir, blog), { recursive: true, force: true });
+for (const dir of [...new Set(Object.values(BLOG_BY_TAG)), 'pages']) {
+  rmSync(join(contentDir, dir), { recursive: true, force: true });
 }
 
 const counts = {};
 for (const post of posts) {
   const blog = blogFor(post);
+  const entryPath = blog === 'reisen' ? `reisen/${tripFor(post)}/${post.slug}` : `${blog}/${post.slug}`;
   counts[blog] = (counts[blog] ?? 0) + 1;
-  writeEntry(
-    join(contentDir, blog),
-    post.slug,
-    {
-      title: post.title,
-      date: post.published_at,
-      updated: post.updated_at,
-      excerpt: post.custom_excerpt ?? post.excerpt,
-      // Ghost's auto excerpt repeats the opening of the body; only a custom one is a lead.
-      lead: Boolean(post.custom_excerpt) || undefined,
-      cover: localizeImage(post.feature_image),
-      coverAlt: post.feature_image_alt,
-      coverCaption: post.feature_image_caption,
-      tags: cleanTags(post.tags),
-      featured: post.featured || undefined,
-    },
-    post.html,
-  );
+  await writeEntry(entryPath, post.slug, post.html, post.feature_image, (cover) => ({
+    title: post.title,
+    date: post.published_at,
+    updated: post.updated_at,
+    excerpt: post.custom_excerpt ?? post.excerpt,
+    // Ghost's auto excerpt repeats the opening of the body; only a custom one is a lead.
+    lead: (Boolean(post.custom_excerpt) && !NO_LEAD.has(post.slug)) || undefined,
+    cover,
+    coverAlt: post.feature_image_alt,
+    coverCaption: post.feature_image_caption,
+    tags: cleanTags(post.tags),
+    featured: post.featured || undefined,
+  }));
 }
 
-rmSync(join(contentDir, 'pages'), { recursive: true, force: true });
 for (const page of pages) {
-  writeEntry(join(contentDir, 'pages'), page.slug, { title: page.title }, page.html);
+  await writeEntry(`pages/${page.slug}`, page.slug, page.html, null, () => ({ title: page.title }));
 }
 
-const imagesSrc = join(backup, 'content/images');
-const imagesDest = join(root, 'public/content/images');
-if (existsSync(imagesSrc)) {
-  cpSync(imagesSrc, imagesDest, {
-    recursive: true,
-    filter: (src) => !src.endsWith('.DS_Store'),
-  });
-}
-
-console.log('Imported posts:', counts, '| pages:', pages.length);
+writeFileSync(missingFile, `${JSON.stringify(missing, null, 2)}\n`);
+console.log('Imported posts:', counts, '| pages:', pages.length, '| missing images:', missing.length);

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostList from '../../../components/PostList.astro';
+import { BLOGS, getPosts, groupByTrip, tripTitle, url } from '../../../lib/site';
+
+export async function getStaticPaths() {
+  const trips = groupByTrip(await getPosts('reisen'));
+  return trips.map(({ trip, posts }) => ({ params: { trip }, props: { trip, posts } }));
+}
+
+const blog = BLOGS.reisen;
+const { trip, posts } = Astro.props;
+const title = tripTitle(trip);
+---
+
+<BaseLayout title={`${title} · ${blog.title}`} description={blog.description} blog={blog.key}>
+  <header class="blog-header">
+    <p><a href={url('/reisen/')}>{blog.title}</a></p>
+    <h1>{title}</h1>
+    <p>{posts.length} Etappen</p>
+  </header>
+  <PostList posts={posts} blog={blog.key} />
+</BaseLayout>

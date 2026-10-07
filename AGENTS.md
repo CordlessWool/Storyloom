@@ -18,7 +18,8 @@ Never mention AI, assistants, tools, or anything pointing to automated authorshi
 
 ## Project notes
 
-- Astro 7. Markdown runs through the `unified()` processor (see `astro.config.mjs`) because `src/lib/local-images.mjs` rewrites image paths in raw HTML.
+- Astro 7. Markdown runs through the `unified()` processor (see `astro.config.mjs`) because `src/lib/markdown-images.mjs` needs the mdast/hast trees (missing-image placeholder, image-only paragraphs → figures).
+- Content entries are folders (`<slug>/index.md` + images named `<slug>-cover.jpg`, `<slug>-01.jpg`); travel posts are grouped by trip folder. Use relative image paths so Astro optimizes them.
 - Internal links must go through `url()` / `postUrl()` from `src/lib/site.ts` so `BASE_PATH` builds keep working.
 - Recipe search (Pagefind) only exists after `npm run build`; test it with `npm run preview`.
 - Docs: https://docs.astro.build

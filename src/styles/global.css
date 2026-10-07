@@ -164,26 +164,21 @@ figcaption {
   margin-top: 0.5rem;
 }
 
-/* Ghost gallery cards */
-.kg-gallery-container {
-  display: flex;
-  flex-direction: column;
+/* Image-only paragraphs become figures; several images a gallery */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
   gap: 0.5rem;
 }
 
-.kg-gallery-row {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.kg-gallery-image {
-  flex: 1 1 0;
-}
-
-.kg-gallery-image img {
+.gallery img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.gallery figcaption {
+  grid-column: 1 / -1;
 }
 
 .post-nav {

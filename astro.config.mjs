@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
-import { rehypeLocalImages } from './src/lib/local-images.mjs';
+import { rehypeFigures, remarkMissingImages } from './src/lib/markdown-images.mjs';
 
 const base = process.env.BASE_PATH ?? '/';
 
@@ -11,9 +11,14 @@ export default defineConfig({
   base,
   trailingSlash: 'always',
   integrations: [sitemap()],
+  // Responsive srcset for every image, including the ones in Markdown.
+  image: { layout: 'constrained' },
   markdown: {
     // unified (remark/rehype) instead of the default Sätteri processor: the
-    // image plugin needs raw HTML (Ghost galleries) parsed into elements.
-    processor: unified({ rehypePlugins: [[rehypeLocalImages, { base }]] }),
+    // image plugins need the mdast/hast trees.
+    processor: unified({
+      remarkPlugins: [[remarkMissingImages, { base }]],
+      rehypePlugins: [rehypeFigures],
+    }),
   },
 });

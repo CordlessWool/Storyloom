@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "import:ghost": "node scripts/import-ghost.mjs",
-    "astro": "astro"
+    "astro": "astro",
+    "restore:images": "node scripts/restore-images.mjs"
   },
   "allowScripts": {
     "esbuild": true

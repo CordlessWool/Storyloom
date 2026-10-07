@@ -1,5 +1,4 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { PLACEHOLDER, isLocal, isMissingLocalImage, withBase } from './local-images.mjs';
 
 export const SITE = {
   title: 'Storyloom',
@@ -44,7 +43,7 @@ export const BLOG_LIST = Object.values(BLOGS);
 
 /** Prefix a root-relative path with the configured base. */
 export function url(path = '/'): string {
-  return withBase(import.meta.env.BASE_URL, path.startsWith('/') ? path : `/${path}`);
+  return import.meta.env.BASE_URL.replace(/\/$/, '') + (path.startsWith('/') ? path : `/${path}`);
 }
 
 export function postUrl(blog: BlogKey, id: string): string {
@@ -63,11 +62,32 @@ export function adjacent(posts: Post[], id: string): { newer?: Post; older?: Pos
   return { newer: posts[i - 1], older: posts[i + 1] };
 }
 
-/** Resolve an image path for output: base-prefixed, placeholder if the local file is missing. */
-export function imageSrc(src?: string): string | undefined {
-  if (!src) return undefined;
-  if (isMissingLocalImage(src)) return url(PLACEHOLDER);
-  return isLocal(src) ? url(src) : src;
+/** Travel posts live in one folder per trip: id `schottland/aufbruch` -> `schottland`. */
+export const TRIPS: Record<string, { title: string }> = {
+  schottland: { title: 'Schottland' },
+  indien: { title: 'Indien' },
+};
+
+export function tripOf(post: Post): string | undefined {
+  const [trip, slug] = post.id.split('/');
+  return slug ? trip : undefined;
+}
+
+export function tripTitle(trip: string): string {
+  return TRIPS[trip]?.title ?? trip.charAt(0).toUpperCase() + trip.slice(1);
+}
+
+/** Posts grouped by trip, each group oldest first (the order of the diary). */
+export function groupByTrip(posts: Post[]): { trip: string; posts: Post[] }[] {
+  const groups = new Map<string, Post[]>();
+  for (const post of posts) {
+    const trip = tripOf(post);
+    if (trip) groups.set(trip, [...(groups.get(trip) ?? []), post]);
+  }
+  return [...groups].map(([trip, list]) => ({
+    trip,
+    posts: list.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf()),
+  }));
 }
 
 export function readingTime(post: Post): number {
