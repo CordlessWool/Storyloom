@@ -4,6 +4,8 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ogImageUrl } from '../lib/cover';
 import { SITE, url, type BlogKey } from '../lib/site';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 
 interface Props {
@@ -47,12 +49,6 @@ const ogImage = image ? await ogImageUrl(image, Astro.site!) : undefined;
         document.documentElement.dataset.theme = theme;
       })();
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-    />
     {import.meta.env.PROD && (
       <script is:inline defer src="https://umami.dropanote.de/script.js" data-website-id="86598dec-a37b-4f4f-b0b5-b762bcbee549"></script>
     )}

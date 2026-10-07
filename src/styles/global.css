@@ -6,8 +6,8 @@
    --surface. */
 
 :root {
-  --font: 'Geist', ui-sans-serif, system-ui, sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  --font: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', monospace;
   --margin: 10rem;
   --measure: 41rem;
   --radius: 12px;
