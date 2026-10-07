@@ -3,7 +3,6 @@ title: "Flädle"
 date: "2020-12-26T18:20:25.000+01:00"
 updated: "2024-02-06T01:11:33.000+01:00"
 excerpt: "Hier in Berlin heißen sie Eierkucher, da Pfannkuchen andersweitig verwendet wird. Ich nenne sie lieber Flädle, dass erinnert mich an meine Oma bei der es davor immer eine Suppe gab und danach zwei rießen Berge Flädle."
-lead: true
 tags: ["Kochen","Schwäbisch","Traditionel"]
 ---
 
