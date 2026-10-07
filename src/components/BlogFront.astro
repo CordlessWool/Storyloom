@@ -1,0 +1,18 @@
+---
+import type { Blog } from '../lib/site';
+
+interface Props {
+  blog: Blog;
+  count: number;
+  /** Mono summary under the intro, e.g. "29 Einträge aus 2014 bis 2016". Empty string hides it. */
+  stat?: string;
+}
+const { blog, count, stat } = Astro.props;
+---
+
+<header class="front-head" data-ressort={blog.key}>
+  <h1><span class="dot" aria-hidden="true"></span>{blog.title}</h1>
+  <p class="front-tagline">{blog.tagline}</p>
+  <p class="front-intro">{blog.description}</p>
+  {stat !== '' && <p class="front-stat mono">{stat ?? `${count} Einträge`}</p>}
+</header>

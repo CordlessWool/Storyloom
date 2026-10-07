@@ -1,23 +1,35 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PostList from '../../../components/PostList.astro';
-import { BLOGS, getPosts, groupByTrip, tripTitle, url } from '../../../lib/site';
+import CoverImage from '../../../components/CoverImage.astro';
+import ReisenLayout from '../../../layouts/ReisenLayout.astro';
+import TripTimeline from '../../../components/TripTimeline.astro';
+import { BLOGS, getPosts, url } from '../../../lib/site';
+import { dayOf, groupTrips, tripCover, tripPeriod } from '../../../lib/trips';
 
 export async function getStaticPaths() {
-  const trips = groupByTrip(await getPosts('reisen'));
-  return trips.map(({ trip, posts }) => ({ params: { trip }, props: { trip, posts } }));
+  const trips = groupTrips(await getPosts('reisen'));
+  return trips.map((trip) => ({ params: { trip: trip.key }, props: { trip } }));
 }
 
 const blog = BLOGS.reisen;
-const { trip, posts } = Astro.props;
-const title = tripTitle(trip);
+const { trip } = Astro.props;
+const cover = tripCover(trip);
+const days = dayOf(trip, trip.posts.at(-1)!);
 ---
 
-<BaseLayout title={`${title} · ${blog.title}`} description={blog.description} blog={blog.key}>
-  <header class="blog-header">
-    <p><a href={url('/reisen/')}>{blog.title}</a></p>
-    <h1>{title}</h1>
-    <p>{posts.length} Etappen</p>
-  </header>
-  <PostList posts={posts} blog={blog.key} />
-</BaseLayout>
+<ReisenLayout title={`${trip.name} · ${blog.title}`} description={`${blog.title}: ${trip.name}, ${tripPeriod(trip)}`} image={cover}>
+  <div class="reisen-front">
+    <header class="front-head" data-ressort="reisen">
+      <p class="front-stat mono"><a href={url('/reisen/')}>← Alle Reisen</a></p>
+      <h1><span class="dot" aria-hidden="true"></span>{trip.name}</h1>
+      <p class="front-tagline">{tripPeriod(trip)}</p>
+      <p class="front-stat mono">{trip.posts.length} Etappen in {days} Tagen</p>
+    </header>
+    {cover && (
+      <figure class="ring ring--front" aria-hidden="true">
+        <CoverImage src={cover} alt="" widths={[320, 640]} sizes="17rem" loading="eager" />
+      </figure>
+    )}
+  </div>
+
+  <TripTimeline trip={trip} showHead={false} />
+</ReisenLayout>

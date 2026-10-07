@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import GeschichtenLayout from '../../layouts/GeschichtenLayout.astro';
 import PostArticle from '../../components/PostArticle.astro';
 import { BLOGS, adjacent, getPosts } from '../../lib/site';
 
@@ -12,6 +12,6 @@ const blog = BLOGS.geschichten;
 const { post, newer, older } = Astro.props;
 ---
 
-<BaseLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover} blog={blog.key}>
-  <PostArticle post={post} blog={blog.key} newer={newer} older={older} />
-</BaseLayout>
+<GeschichtenLayout title={post.data.title} description={post.data.excerpt}>
+  <PostArticle post={post} blog={blog.key} newer={newer} older={older} showCover={false} olderLabel="Vorherige Geschichte" newerLabel="Nächste Geschichte" />
+</GeschichtenLayout>

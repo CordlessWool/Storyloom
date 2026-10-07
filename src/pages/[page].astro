@@ -12,8 +12,10 @@ const { Content } = await render(page);
 ---
 
 <BaseLayout title={page.data.title}>
-  <article class="post">
-    <h1>{page.data.title}</h1>
-    <div class="post-content"><Content /></div>
+  <article class="entry entry--plain">
+    <div class="entry-main">
+      <h1>{page.data.title}</h1>
+      <div class="prose"><Content /></div>
+    </div>
   </article>
 </BaseLayout>

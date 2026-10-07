@@ -1,0 +1,49 @@
+---
+// Recipe cards. Filtering by tag and the search live in RecipeSearch, which
+// hides or shows these cards.
+import CoverImage from '../CoverImage.astro';
+import RecipeTile from './RecipeTile.astro';
+import { postUrl, readingTime, type Post } from '../../lib/site';
+
+interface Props {
+  posts: Post[];
+}
+const { posts: all } = Astro.props;
+
+const lead = all.find((p) => p.data.cover) ?? all[0];
+const posts = lead ? [lead, ...all.filter((p) => p !== lead)] : all;
+---
+
+<ul class="recipes" id="recipe-grid">
+  {posts.map((post, i) => {
+    const img = post.data.cover;
+    const { title, excerpt, tags } = post.data;
+    return (
+      <li class:list={['recipe', { 'recipe--lead': i === 0 }]} data-tags={JSON.stringify(tags)}>
+        <a href={postUrl('rezepte', post.id)}>
+          <span class="recipe-media">
+            {img ? (
+              <CoverImage
+                src={img}
+                alt=""
+                widths={i === 0 ? [640, 1200, 1800] : [400, 800]}
+                sizes={i === 0 ? '(min-width: 64rem) 50rem, 100vw' : '(min-width: 64rem) 24rem, 100vw'}
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+            ) : (
+              <RecipeTile tags={tags} />
+            )}
+          </span>
+          <span class="recipe-body">
+            <span class="recipe-title">{title}</span>
+            {excerpt && <span class="recipe-excerpt">{excerpt}</span>}
+            <span class="recipe-meta mono">
+              <span>{readingTime(post)} Min.</span>
+              {tags.slice(0, 3).map((t) => <span>#{t}</span>)}
+            </span>
+          </span>
+        </a>
+      </li>
+    );
+  })}
+</ul>

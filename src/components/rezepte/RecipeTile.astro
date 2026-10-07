@@ -1,0 +1,17 @@
+---
+// Stand-in for a recipe without a photo: tinted surface, category line icon
+// and the category name. Not a placeholder for a missing file — these recipes
+// simply have no picture.
+import RecipeIcon from './RecipeIcon.astro';
+import { ICON_LABEL, iconKind } from './recipe-icons';
+
+interface Props {
+  tags: string[];
+}
+const kind = iconKind(Astro.props.tags);
+---
+
+<span class="recipe-tile" data-kind={kind}>
+  <RecipeIcon kind={kind} />
+  <span class="recipe-tile-label mono">{ICON_LABEL[kind]}</span>
+</span>

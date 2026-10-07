@@ -57,6 +57,12 @@ Images that are referenced but missing show a placeholder instead of breaking th
 npm run restore:images -- path/to/folder-with-originals
 ```
 
+## Design
+
+Each blog has its own route folder in `src/pages/<blog>/` and its own layout (`src/layouts/<Blog>Layout.astro`) and stylesheet (`src/styles/<blog>.css`). Shared design tokens (colors for light/dark, fonts, spacing) live at the top of `src/styles/global.css`.
+
+Travel posts are numbered by day within their trip (`src/lib/trips.ts`); the timeline is shared by `/reisen/` and the trip pages (`src/components/TripTimeline.astro`). Recipe pages extract ingredients from the Markdown at build time (`src/components/rezepte/recipe-parts.ts`): a bold label on its own line (`**Zutaten**`, `**Teig**`, …) followed by the ingredient lines.
+
 ## Ghost import
 
 The content was imported once from a Ghost backup:

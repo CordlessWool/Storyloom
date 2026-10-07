@@ -1,7 +1,7 @@
 ---
 import CoverImage from './CoverImage.astro';
 import { render } from 'astro:content';
-import { formatDate, postUrl, readingTime, type BlogKey, type Post } from '../lib/site';
+import { postUrl, readingTime, type BlogKey, type Post } from '../lib/site';
 
 interface Props {
   post: Post;
@@ -10,47 +10,95 @@ interface Props {
   older?: Post;
   /** Mark the article as Pagefind search content. */
   searchable?: boolean;
+  /** Show the cover image (Geschichten are text only). */
+  showCover?: boolean;
+  /** Labels for the older/newer links. */
+  olderLabel?: string;
+  newerLabel?: string;
+  /** Show the cover as a wide hero above the entry instead of inside the text column. */
+  heroCover?: boolean;
+  /** Tags already shown elsewhere on the page (e.g. the trip in the day badge). */
+  hideTags?: string[];
 }
-const { post, blog, newer, older, searchable = false } = Astro.props;
+const {
+  post,
+  blog,
+  newer,
+  older,
+  searchable = false,
+  showCover = true,
+  olderLabel = 'Älterer Eintrag',
+  newerLabel = 'Neuerer Eintrag',
+  heroCover = false,
+  hideTags = [],
+} = Astro.props;
 const { title, date, excerpt, lead, cover, coverAlt, coverCaption, tags } = post.data;
 const { Content } = await render(post);
+const img = showCover ? cover : undefined;
+const hero = heroCover ? img : undefined;
+const shownTags = tags.filter((t) => !hideTags.includes(t));
+const numeric = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+const weekday = new Intl.DateTimeFormat('de-DE', { weekday: 'long' });
 ---
 
-<article class="post" data-pagefind-body={searchable ? '' : undefined}>
-  <header>
-    <h1>{title}</h1>
-    <p class="post-meta">
-      <time datetime={date.toISOString()}>{formatDate(date)}</time>
-      · {readingTime(post)} Min. Lesezeit
+{hero && (
+  <figure class="entry-hero" data-ressort={blog}>
+    <CoverImage src={hero} alt={coverAlt ?? ''} widths={[800, 1400, 2000]} sizes="100vw" loading="eager" fetchpriority="high" />
+    {coverCaption && <figcaption set:html={coverCaption} />}
+  </figure>
+)}
+
+<article class:list={['entry', { 'entry--after-hero': hero }]} data-ressort={blog} data-pagefind-body={searchable ? '' : undefined}>
+  <aside class="entry-margin">
+    <div class="entry-kicker" data-pagefind-ignore>
+      <slot name="kicker" />
+    </div>
+    <p class="entry-date mono" data-pagefind-ignore>
+      <time datetime={date.toISOString()}>{numeric.format(date)}</time>
+      <span>{weekday.format(date)}</span>
     </p>
-    {tags.length > 0 && (
-      <ul class="tags">
-        {tags.map((t) => <li data-pagefind-filter={searchable ? 'Kategorie' : undefined}>{t}</li>)}
+    <p class="entry-read mono" data-pagefind-ignore>{readingTime(post)} Min. Lesezeit</p>
+    {shownTags.length > 0 && (
+      <ul class="hashtags" aria-label="Schlagwörter">
+        {shownTags.map((t) => <li data-pagefind-filter={searchable ? 'Kategorie' : undefined}>{t}</li>)}
       </ul>
     )}
-  </header>
-  {cover && (
-    <figure class="post-cover">
-      <CoverImage
-        src={cover}
-        alt={coverAlt ?? ''}
-        widths={[640, 1024, 1600]}
-        sizes="(min-width: 42rem) 42rem, 100vw"
-        loading="eager"
-        data-pagefind-meta={searchable ? 'image[src]' : undefined}
-      />
-      {coverCaption && <figcaption set:html={coverCaption} />}
-    </figure>
-  )}
-  {lead && excerpt && <p class="post-excerpt">{excerpt}</p>}
-  <div class="post-content">
-    <Content />
+    <slot name="actions" />
+  </aside>
+  <div class="entry-main">
+    <h1>{title}</h1>
+    {lead && excerpt && <p class="entry-lead">{excerpt}</p>}
+    {img && !heroCover && (
+      <figure class="entry-cover">
+        <CoverImage
+          src={img}
+          alt={coverAlt ?? ''}
+          widths={[640, 1024, 1600]}
+          sizes="(min-width: 48rem) 41rem, 100vw"
+          data-pagefind-meta={searchable ? 'image[src]' : undefined}
+        />
+        {coverCaption && <figcaption set:html={coverCaption} />}
+      </figure>
+    )}
+    <div class="prose">
+      <Content />
+    </div>
   </div>
 </article>
 
 {(newer || older) && (
-  <nav class="post-nav" aria-label="Weitere Beiträge">
-    {older && <a rel="prev" href={postUrl(blog, older.id)}>← {older.data.title}</a>}
-    {newer && <a rel="next" href={postUrl(blog, newer.id)}>{newer.data.title} →</a>}
+  <nav class="pager" aria-label="Weitere Einträge" data-ressort={blog}>
+    {older && (
+      <a rel="prev" href={postUrl(blog, older.id)}>
+        <span class="mono">{olderLabel}</span>
+        {older.data.title}
+      </a>
+    )}
+    {newer && (
+      <a rel="next" href={postUrl(blog, newer.id)}>
+        <span class="mono">{newerLabel}</span>
+        {newer.data.title}
+      </a>
+    )}
   </nav>
 )}

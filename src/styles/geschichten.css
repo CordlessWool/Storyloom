@@ -1,0 +1,60 @@
+/* Geschichten: a table of contents by year, text-only reading pages. */
+
+.contents-year {
+  position: relative;
+}
+
+/* The margin rule runs through the year headings too */
+.contents-year::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--margin);
+  border-left: 1px solid var(--line);
+}
+
+.contents-year h2 {
+  width: var(--margin);
+  margin: 0;
+  padding: 2.5rem 1.25rem 0.25rem 0;
+  color: var(--sec-ink);
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.contents-year:first-child h2 {
+  padding-top: 0.5rem;
+}
+
+.contents .ledger-margin {
+  padding-top: 1.25rem;
+}
+
+/* Stories are text only: calmer, slightly larger reading size */
+html[data-blog='geschichten'] .prose {
+  font-size: 1.15rem;
+  line-height: 1.8;
+}
+
+html[data-blog='geschichten'] .entry-main h1 {
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+@media (max-width: 640px) {
+  .contents-year::before {
+    left: 0;
+  }
+
+  .contents-year h2 {
+    width: auto;
+    padding: 2.25rem 0 0 1.25rem;
+    text-align: left;
+  }
+
+  html[data-blog='geschichten'] .prose {
+    font-size: 1.08rem;
+  }
+}

@@ -1,0 +1,60 @@
+---
+// Left column of a recipe: key facts, then ingredient groups as a check-off list.
+import type { Fact, IngredientGroup } from './recipe-parts';
+
+interface Props {
+  groups: IngredientGroup[];
+  facts: Fact[];
+  count: number;
+}
+const { groups, facts, count } = Astro.props;
+let n = 0;
+---
+
+<section class="ingredients-panel" aria-label="Zutaten">
+  <p class="panel-head" data-pagefind-ignore>
+    <span class="dot" aria-hidden="true"></span>
+    <span>Zutaten</span>
+    {count > 0 && <span class="mono" data-pagefind-ignore>{count}</span>}
+  </p>
+  {facts.length > 0 && (
+    <dl class="panel-facts">
+      {facts.map((f) => (
+        <div>
+          <dt class="mono">{f.label}</dt>
+          <dd set:html={f.lines.join('<br>')} />
+        </div>
+      ))}
+    </dl>
+  )}
+  {groups.map((g) => (
+    <section class:list={['panel-group', { 'panel-group--equipment': g.equipment }]}>
+      {/* The panel head already says "Zutaten"; repeat only other group names. */}
+      <h2
+        class:list={['mono', { 'visually-hidden': g.label === 'Zutaten' && !g.equipment }]}
+        data-pagefind-ignore={g.label === 'Zutaten' && !g.equipment ? '' : undefined}
+      >
+        {g.equipment ? 'Das brauchst du' : g.label}
+      </h2>
+      <ul>
+        {g.items.map((item) => {
+          const id = `zutat-${++n}`;
+          return (
+            <li>
+              {/* The text stays outside <label>: Pagefind skips label content,
+                  which made ingredients unsearchable. The empty overlay label
+                  keeps the whole row clickable. */}
+              <input type="checkbox" id={id} aria-labelledby={`${id}-text`} data-pagefind-ignore />
+              <span class="item" id={`${id}-text`}>
+                <span class="qty mono">{item.qty}</span>{' '}
+                <span class="name" set:html={item.name} />
+              </span>
+              <label class="item-hit" for={id} data-pagefind-ignore></label>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  ))}
+  <p class="panel-hint mono" data-pagefind-ignore>Abhaken, was schon bereitsteht.</p>
+</section>

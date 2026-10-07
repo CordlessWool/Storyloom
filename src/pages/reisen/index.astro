@@ -1,21 +1,48 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostList from '../../components/PostList.astro';
-import { BLOGS, getPosts, groupByTrip, tripTitle, url } from '../../lib/site';
+import CoverImage from '../../components/CoverImage.astro';
+import ReisenLayout from '../../layouts/ReisenLayout.astro';
+import BlogFront from '../../components/BlogFront.astro';
+import TripTimeline from '../../components/TripTimeline.astro';
+import { BLOGS, getPosts, url } from '../../lib/site';
+import { dayOf, groupTrips, tripCover, tripPeriod, type Trip } from '../../lib/trips';
 
 const blog = BLOGS.reisen;
-const trips = groupByTrip(await getPosts(blog.key));
+const posts = await getPosts(blog.key);
+const trips = groupTrips(posts);
+
+// Opening photo for the front: the cover of the most photographed trip.
+const photoCount = (t: Trip) => t.posts.filter((p) => p.data.cover).length;
+const frontImage = [...trips].sort((a, b) => photoCount(b) - photoCount(a)).map(tripCover).find(Boolean);
 ---
 
-<BaseLayout title={blog.title} description={blog.description} blog={blog.key}>
-  <header class="blog-header">
-    <h1>{blog.title}</h1>
-    <p>{blog.tagline}</p>
-  </header>
-  {trips.map(({ trip, posts }) => (
-    <section class="trip">
-      <h2><a href={url(`/reisen/${trip}/`)}>{tripTitle(trip)}</a></h2>
-      <PostList posts={posts} blog={blog.key} />
-    </section>
-  ))}
-</BaseLayout>
+<ReisenLayout title={blog.title} description={blog.description}>
+  <div class="reisen-front">
+    <BlogFront blog={blog} count={posts.length} stat={`${trips.length} Reisen, ${posts.length} Etappen`} />
+    {frontImage && (
+      <figure class="ring ring--front" aria-hidden="true">
+        <CoverImage src={frontImage} alt="" widths={[320, 640]} sizes="17rem" loading="eager" />
+      </figure>
+    )}
+  </div>
+
+  <ul class="trip-cards" aria-label="Reisen">
+    {trips.map((trip) => {
+      const img = tripCover(trip);
+      const days = dayOf(trip, trip.posts.at(-1)!);
+      return (
+        <li>
+          <a href={url(`/reisen/${trip.key}/`)}>
+            <span class="trip-card-media">{img && <CoverImage src={img} alt="" widths={[480, 960]} sizes="(min-width: 48rem) 34rem, 100vw" />}</span>
+            <span class="trip-card-text">
+              <span class="trip-card-name">{trip.name}</span>
+              <span class="trip-card-meta mono">{tripPeriod(trip)}</span>
+              <span class="trip-card-meta mono">{trip.posts.length} Etappen in {days} Tagen</span>
+            </span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+
+  {trips.map((trip) => <TripTimeline trip={trip} />)}
+</ReisenLayout>

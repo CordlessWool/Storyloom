@@ -2,8 +2,17 @@
 import { SITE, url } from '../lib/site';
 ---
 
-<footer class="site-footer">
-  <a href={url('/hintergrund/')}>Über den Autor</a>
-  <a href={url('/impressum/')}>Impressum</a>
-  <a href={SITE.support.url} rel="noopener">{SITE.support.label}</a>
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <p class="footer-brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      {SITE.title}
+      <span class="footer-claim">{SITE.description}</span>
+    </p>
+    <nav aria-label="Weiteres">
+      <a href={url('/hintergrund/')}>Über den Autor</a>
+      <a href={url('/impressum/')}>Impressum</a>
+      <a href={SITE.support.url} rel="noopener">{SITE.support.label}</a>
+    </nav>
+  </div>
 </footer>
