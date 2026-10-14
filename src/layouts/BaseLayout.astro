@@ -3,7 +3,8 @@ import type { ImageMetadata } from 'astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ogImageUrl } from '../lib/cover';
-import { BLOGS, SITE, postUrl, url, type BlogKey, type Post } from '../lib/site';
+import { BLOGS, SITE, url, type BlogKey, type Post } from '../lib/site';
+import { author, blogPosting, metaDescription } from '../lib/structured-data';
 import '@fontsource-variable/geist';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
@@ -22,31 +23,16 @@ const pageTitle = title ? `${title} – ${SITE.title}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? await ogImageUrl(image, Astro.site!) : undefined;
 
-// Ghost's auto excerpts are whole paragraphs; search results show about 160 characters.
-const full = (Astro.props.description ?? SITE.description).replace(/\s+/g, ' ').trim();
-const description = full.length > 160 ? `${full.slice(0, 157).replace(/\s+\S*$/, '')} …` : full;
+const description = metaDescription(Astro.props.description ?? SITE.description);
 
 const feeds = [
   ...(blog ? [{ title: `${BLOGS[blog].title} – ${SITE.title}`, href: url(`/${blog}/rss.xml`) }] : []),
   { title: SITE.title, href: url('/rss.xml') },
 ];
 
-const author = { '@type': 'Person', name: SITE.author };
-// Recipes carry their own schema.org Recipe (RecipeArticle).
+// Recipes carry their own schema (RecipeArticle).
 const jsonLd = post && post.collection !== 'rezepte'
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
-      headline: post.data.title,
-      description,
-      datePublished: post.data.date.toISOString(),
-      dateModified: (post.data.updated ?? post.data.date).toISOString(),
-      url: new URL(postUrl(post.collection, post.id), Astro.site).href,
-      ...(ogImage && { image: ogImage }),
-      inLanguage: SITE.lang,
-      author,
-      ...(post.data.tags.length && { keywords: post.data.tags.join(', ') }),
-    }
+  ? blogPosting(post, description, ogImage, Astro.site!)
   : canonical.pathname === url('/')
     ? { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.title, description, url: canonical.href, inLanguage: SITE.lang, author }
     : undefined;
